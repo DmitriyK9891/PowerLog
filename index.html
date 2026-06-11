@@ -50,6 +50,19 @@
             margin-top: 10px;
         }
 
+        /* Обгортка для логотипу та назви в один рядок */
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
         header h1 {
             margin: 0;
             color: var(--text-light);
@@ -538,7 +551,10 @@
 
     <div class="container">
         <header>
-            <h1>PowerLog Pro</h1>
+            <div class="brand-wrapper">
+                <img src="https://img.icons8.com/nolan/512/dumbbell.png" alt="Logo" class="brand-logo">
+                <h1>PowerLog Pro</h1>
+            </div>
             <p>Твої кастомні програми тренувань</p>
         </header>
 
@@ -621,10 +637,9 @@
     </div>
 
     <script>
-        // Статична глобальна база дефолтних вправ
         const defaultExerciseDB = {
             single_leg_lunges: { cat: "Ноги та Сідниці", title: "Випади на одній нозі", tip: "План: 3 підходи по 10-12 повторень", eq: "Дві гантелі в руках.", pos: "Одна нога попереду, інша ззаду на носку. Спина рівна, погляд спрямований вперед.", tech: "Опускайся вертикально вниз, щоб коліно передньої ноги не виходило за лінію носка. Основна вага тіла тисне на п'яту передньої ноги. Опускайся до паралелі стегна з підлогою, після чего піднімайся потужним рухом вгору." },
-            db_squats: { cat: "Ноги та Сідниці", title: "Присідання з гантелями", tip: "План: 3 підходи по 8-10 повторень", eq: "Дві гантелі в опущених руках або утримуються на плечах.", pos: "Ноги на ширині плечей, носки розгорнуті в сторони на 15-30 градусів.", tech: "Починай рух з відведення тазу назад, ніби сідаєш на стілець. Тримай коліна в напрямку носків. Спина пряма. Присідай до паралелі та вставай, штовхаючись п'ятами." },
+            db_squats: { cat: "Ноги та Сідниці", title: "Присідання з гантелями", tip: "План: 3 підходи по 8-10 повторень", eq: "Дві гантелі в опущених руках або утримуються на плечах.", pos: "Ноги на ширині плечей, носки розгорнуті в сторони на 15-30 градусів.", tech: "Починай рух з відведення тазу назад, ніби сідаєш на стілець. Тримай коліна в напрямну носків. Спина пряма. Присідай до паралелі та вставай, штовхаючись п'ятами." },
             db_shrugs: { cat: "Плечі та Трапеції", title: "Шраги з гантелями", tip: "План: 3 підходи по 8-10 повторень", eq: "Важкі гантелі з боків корпусу.", pos: "Стоячи, ноги на ширині стегон, руки повністю випрямлені в ліктях.", tech: "Ізольованим рухом піднімай плечі вгору в напрямку вух. Не згинай лікті і не обертай плечима по колу. Роби коротку паузу в верхній точці, після чого плавно опускай вагу." },
             db_seated_press: { cat: "Плечі та Трапеції", title: "Жим гантелей сидячи (вгору)", tip: "План: 3 підходи по 10-12 повторень", eq: "Лава зі спинкою під кутом 80-90 градусів, дві гантелі.", pos: "Сидячи, щільно притисни поперек і лопатки до спинки лави. Гантелі на рівні вух.", tech: "Потужним рухом витискай гантелі вгору по дугоподібній траєкторії. Не блокуй лікті повністю у верхній точці. Плавно опускай снаряди до рівня вух або підборіддя." },
             db_bench_press: { cat: "Груди та Спина", title: "Жим гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", eq: "Горизонтальна лава, дві гантелі.", pos: "Лежачи на лаві, стопи жорстко впираються в підлогу. Лопатки максимально зведені.", tech: "Опускай гантелі до рівня грудей, тримаючи кут у ліктях близько 45-60 градусів від корпусу. Витискай гантелі вгору, зводячи їх над центром грудей." },
@@ -647,11 +662,10 @@
             db_triceps_extension: { cat: "Руки (Біцепс/Трицепс)", title: "Підйом гантелі на трицепс з-за голови", tip: "План: 4 підходи по 10-12 повторень", eq: "Одна гантель, яку тримають обома руками під верхній внутрішній диск.", pos: "Сидячи на лаві або стоячи рівно. Руки з гантеллю випрямлені над головою.", tech: "Утримуючи лікті близько до голови, плавно опускай гантель за голову до повного згинання рук. Зусиллям трицепсів випрямляй руки вгору." }
         };
 
-        // Стан додатку (Кастомні вправи тепер зберігаються всередині стану!)
         let appState = {
             activeProgramId: "prog_1",
             activeDayIndex: 0,
-            customExercises: {}, // Сюди потраплятимуть особисті рухи
+            customExercises: {},
             programs: [
                 {
                     id: "prog_1",
@@ -677,14 +691,12 @@
         let timerInterval = null;
 
         window.onload = function() {
-            // Очищення старих версій для уникнення конфліктів архітектури
             localStorage.removeItem('powerLog_v10_appstore_style');
             localStorage.removeItem('powerLog_v11_unified');
 
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
                 appState = JSON.parse(saved);
-                // На випадок перенесення зі старої версії
                 if (!appState.customExercises) appState.customExercises = {};
             }
             renderApp();
@@ -694,12 +706,10 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
         }
 
-        // Поєднання базової та кастомної бібліотеки вправ
         function getFullExerciseDB() {
             return { ...defaultExerciseDB, ...appState.customExercises };
         }
 
-        // Керування формою створення вправ
         function toggleCustomExerciseForm() {
             const form = document.getElementById('customExerciseForm');
             if(form.style.display === 'flex') {
@@ -734,7 +744,6 @@
 
             saveState();
             
-            // Очищення форми
             document.getElementById('customName').value = '';
             document.getElementById('customEq').value = '';
             document.getElementById('customPos').value = '';
@@ -743,18 +752,15 @@
             toggleCustomExerciseForm();
             renderApp();
             
-            // Ставимо фокус на щойно створену вправу
             document.getElementById('exerciseSelect').value = key;
         }
 
-        // Наповнення селекту категоріями та вправами
         function populateExerciseSelect() {
             const select = document.getElementById('exerciseSelect');
             select.innerHTML = '';
             
             const fullDB = getFullExerciseDB();
             
-            // Групуємо всі вправи за категоріями
             const categories = {
                 "Кастомні вправи": [],
                 "Ноги та Сідниці": [],
@@ -775,9 +781,8 @@
                 }
             }
 
-            // Рендеримо групи в селект
             for (let catName in categories) {
-                if (categories[catName].length === 0) continue; // Пропускаємо пусті групи (наприклад, якщо немає кастомних)
+                if (categories[catName].length === 0) continue;
                 
                 const group = document.createElement('optgroup');
                 group.label = catName;
@@ -945,7 +950,6 @@
             }
         }
 
-        // Функції копіювання / вставки даних для пристроїв
         function exportData() {
             const dataStr = btoa(unescape(encodeURIComponent(JSON.stringify(appState))));
             navigator.clipboard.writeText(dataStr).then(() => {
@@ -975,7 +979,6 @@
         }
 
         function renderApp() {
-            // Спершу наповнюємо селект актуальними вправами
             populateExerciseSelect();
 
             const progContainer = document.getElementById('programsContainer');
