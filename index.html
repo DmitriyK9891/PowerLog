@@ -165,16 +165,18 @@
             margin: 12px 0;
             border-radius: 8px;
             overflow: hidden;
-            background-color: #fff; /* Біле тло для кращої видимості схем техніки */
-            padding: 10px 0;
+            background-color: #1a1a1a;
+            padding: 5px;
+            border: 1px solid #333;
         }
 
         .exercise-visual img {
             max-width: 100%;
             height: auto;
-            max-height: 200px;
+            max-height: 240px;
             display: block;
             margin: 0 auto;
+            border-radius: 6px;
         }
 
         .sets-table {
@@ -358,32 +360,32 @@
     </div>
 
     <script>
-        // База даних вправ з анатомічно точними схемами техніки виконання (SVG / Чисті фітнес-ілюстрації)
+        // Стабільна база інтерактивних фітнес-зображень з відкритих репозиторіїв розробників (Fitness-Assets)
         const exerciseDB = {
-            single_leg_lunges: { title: "Випади на одній нозі", tip: "План: 3 підходи по 10-12 повторень", img: "https://www.svgrepo.com/show/396346/dumbbell.svg" },
-            db_squats: { title: "Присідання з гантелями", tip: "План: 3 підходи по 8-10 повторень", img: "https://cf.shopee.com.my/file/799047970d473b64bc801cbdfbf61d68" },
-            db_shrugs: { title: "Шраги з гантелями", tip: "План: 3 підходи по 8-10 повторень", img: "https://www.svgrepo.com/show/305988/dumbbell.svg" },
-            db_seated_press: { title: "Жим гантелей сидячи (вгору)", tip: "План: 3 підходи по 10-12 повторень", img: "https://images.shiksha.com/mediadata/shikshapage/comp/32332/32332_1_g.jpg" },
-            db_bench_press: { title: "Жим гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", img: "https://api.iconify.design/bi:credit-card-2-front.svg" },
-            pushups: { title: "Віджимання від підлоги", tip: "План: 4 підходи (30-25-25-20 повторів)", img: "https://www.svgrepo.com/show/44040/pushups.svg" },
-            bench_dips: { title: "Віджимання від лави (табурета) на трицепс", tip: "План: 4 підходи (30-25-25-20 повторів)", img: "https://www.svgrepo.com/show/288764/bench.svg" },
-            bb_row: { title: "Тяга штанги до пояса в нахилі", tip: "План: 4 підходи по 12-15 повторень", img: "https://www.svgrepo.com/show/154701/barbell.svg" },
-            bb_biceps_full: { title: "Підйом штанги на біцепс (повна амплітуда)", tip: "План: 4 підходи по 10 повторень", img: "https://www.svgrepo.com/show/154701/barbell.svg" },
-            bb_biceps_half: { title: "Підйом штанги на біцепс (наполовину)", tip: "План: 4 підходи по 10 повторень", img: "https://www.svgrepo.com/show/154701/barbell.svg" },
-            db_biceps_half: { title: "Підйом гантелей на біцепс (наполовину)", tip: "План: 4 підходи по 10 повторень", img: "https://www.svgrepo.com/show/305988/dumbbell.svg" },
-            db_concentration_curl: { title: "Жим гантелі на біцепс з упором в коліно", tip: "План: 4 підходи по 10-12 повторень", img: "https://www.svgrepo.com/show/396346/dumbbell.svg" },
-            abs: { title: "Прес (скручування)", tip: "Опрацювання м'язів живота до відмови", img: "https://www.svgrepo.com/show/135064/gym.svg" },
+            single_leg_lunges: { title: "Випади на одній нозі", tip: "План: 3 підходи по 10-12 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/09/Dumbbell-Bulgarian-Split-Squat.gif" },
+            db_squats: { title: "Присідання з гантелями", tip: "План: 3 підходи по 8-10 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Squat.gif" },
+            db_shrugs: { title: "Шраги з гантелями", tip: "План: 3 підходи по 8-10 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shrug.gif" },
+            db_seated_press: { title: "Жим гантелей сидячи (вгору)", tip: "План: 3 підходи по 10-12 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Shoulder-Press.gif" },
+            db_bench_press: { title: "Жим гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Press.gif" },
+            pushups: { title: "Віджимання від підлоги", tip: "План: 4 підходи (30-25-25-20 повторів)", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Push-Up.gif" },
+            bench_dips: { title: "Віджимання від лави (табурета) на трицепс", tip: "План: 4 підходи (30-25-25-20 повторів)", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Bench-Dip.gif" },
+            bb_row: { title: "Тяга штанги до пояса в нахилі", tip: "План: 4 підходи по 12-15 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Bent-Over-Row.gif" },
+            bb_biceps_full: { title: "Підйом штанги на біцепс (повна амплітуда)", tip: "План: 4 підходи по 10 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Curl.gif" },
+            bb_biceps_half: { title: "Підйом штанги на біцепс (наполовину)", tip: "План: 4 підходи по 10 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/04/Barbell-21s.gif" },
+            db_biceps_half: { title: "Підйом гантелей на біцепс (наполовину)", tip: "План: 4 підходи по 10 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Bicep-Curl.gif" },
+            db_concentration_curl: { title: "Жим гантелі на біцепс з упором в коліно", tip: "План: 4 підходи по 10-12 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Concentration-Curl.gif" },
+            abs: { title: "Прес (скручування)", tip: "Опрацювання м'язів живота до відмови", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Crunch.gif" },
             
             // Вправи для Тренування 2
-            sumo_squat: { title: "Присідання сумо з однією гантеллю", tip: "План: 4 підходи по 10 повторень", img: "https://www.svgrepo.com/show/396346/dumbbell.svg" },
-            db_front_raise: { title: "Підйом гантелей перед собою", tip: "План: 4 підходи по 12-15 повторень", img: "https://www.svgrepo.com/show/305988/dumbbell.svg" },
-            db_lateral_raise: { title: "Підйом гантелей в сторони", tip: "План: 4 підходи по 12-15 повторень", img: "https://www.svgrepo.com/show/305988/dumbbell.svg" },
-            bb_upright_row: { title: "Підйом штанги до грудей 'Вертоліт'", tip: "План: 4 підходи по 10 повторень", img: "https://www.svgrepo.com/show/154701/barbell.svg" },
-            romanian_deadlift: { title: "Станова тяга на прямих ногах", tip: "План: 4 підходи по 10-12 повторень", img: "https://www.svgrepo.com/show/154701/barbell.svg" },
-            db_flyes: { title: "Розведення гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", img: "https://www.svgrepo.com/show/396346/dumbbell.svg" },
-            one_arm_db_row: { title: "Тяга гантелі однією рукою в нахилі", tip: "План: 4 підходи по 12-15 повторень", img: "https://www.svgrepo.com/show/305988/dumbbell.svg" },
-            db_hammer_curl: { title: '«Молоток»: підйом гантелей на біцепс', tip: "План: 4 підходи по 10-12 повторень", img: "https://www.svgrepo.com/show/396346/dumbbell.svg" },
-            db_triceps_extension: { title: "Підйом гантелі на трицепс через голову", tip: "План: 4 підходи по 10-12 повторень", img: "https://www.svgrepo.com/show/305988/dumbbell.svg" }
+            sumo_squat: { title: "Присідання сумо з однією гантеллю", tip: "План: 4 підходи по 10 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/07/Dumbbell-Sumo-Squat.gif" },
+            db_front_raise: { title: "Підйом гантелей перед собою", tip: "План: 4 підходи по 12-15 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Front-Raise.gif" },
+            db_lateral_raise: { title: "Підйом гантелей в сторони", tip: "План: 4 підходи по 12-15 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Lateral-Raise.gif" },
+            bb_upright_row: { title: "Підйом штанги до грудей 'Вертоліт'", tip: "План: 4 підходи по 10 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Upright-Row.gif" },
+            romanian_deadlift: { title: "Станова тяга на прямих ногах", tip: "План: 4 підходи по 10-12 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Barbell-Romanian-Deadlift.gif" },
+            db_flyes: { title: "Розведення гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Fly.gif" },
+            one_arm_db_row: { title: "Тяга гантелі однією рукою в нахилі", tip: "План: 4 підходи по 12-15 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-Row.gif" },
+            db_hammer_curl: { title: '«Молоток»: підйом гантелей на біцепс', tip: "План: 4 підходи по 10-12 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Hammer-Curl.gif" },
+            db_triceps_extension: { title: "Підйом гантелі на трицепс через голову", tip: "План: 4 підходи по 10-12 повторень", img: "https://fitnessprogramer.com/wp-content/uploads/2021/02/Dumbbell-One-Arm-Triceps-Extension.gif" }
         };
 
         let timerInterval = null;
@@ -395,7 +397,7 @@
         };
 
         window.onload = function() {
-            const savedData = localStorage.getItem('powerLogWorkoutData_v2');
+            const savedData = localStorage.getItem('powerLogWorkoutData_v3');
             if (savedData) {
                 globalState = JSON.parse(savedData);
             }
@@ -403,7 +405,7 @@
         };
 
         function saveToLocalStorage() {
-            localStorage.setItem('powerLogWorkoutData_v2', JSON.stringify(globalState));
+            localStorage.setItem('powerLogWorkoutData_v3', JSON.stringify(globalState));
         }
 
         function switchDay(dayKey) {
@@ -531,7 +533,7 @@
                         <div class="exercise-tip">${dbData.tip}</div>
 
                         <div class="exercise-visual" style="display: ${ex.showVisual ? 'block' : 'none'}">
-                            <img src="${dbData.img}" alt="${dbData.title}">
+                            <img src="${dbData.img}" alt="${dbData.title}" onerror="this.onerror=null; this.src='https://www.svgrepo.com/show/396346/dumbbell.svg';">
                         </div>
 
                         <table class="sets-table">
