@@ -165,24 +165,22 @@
             margin: 12px 0;
             border-radius: 8px;
             background-color: #151515;
-            padding: 20px 0;
+            padding: 15px;
             border: 1px solid #2d2d2d;
         }
 
         .exercise-visual svg {
-            width: 80px;
-            height: 80px;
+            width: 50px;
+            height: 50px;
             fill: var(--accent-color);
-            margin: 0 auto;
+            margin: 0 auto 8px auto;
             display: block;
         }
 
         .visual-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-top: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 14px;
+            color: #fff;
+            font-weight: 500;
         }
 
         .sets-table {
@@ -366,7 +364,6 @@
     </div>
 
     <script>
-        // Вбудовані векторні SVG-іконки. Вони є частиною коду і завантажуються ГАРАНТОВАНО без інтернету.
         const svgIcons = {
             dumbbell: `<svg viewBox="0 0 24 24"><path d="M5 9h1a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1zm14 0h1a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1zM2 13h2v-2H2v2zm18 0h2v-2h-2v2zM7 11h10v-2H7v2zm-2 4h14v-2H5v2z"/></svg>`,
             barbell: `<svg viewBox="0 0 24 24"><path d="M3 11H1v2h2v-2zm18 0h2v2h-2v-2zM6 9h1a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1zm11 0h1a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1zM4 13h16v-2H4v2z"/></svg>`,
@@ -375,41 +372,39 @@
         };
 
         const exerciseDB = {
-            single_leg_lunges: { title: "Випади на одній нозі", tip: "План: 3 підходи по 10-12 повторень", type: "dumbbell", label: "Інвентар: Гантелі (Асиметрія)" },
-            db_squats: { title: "Присідання з гантелями", tip: "План: 3 підходи по 8-10 повторень", type: "dumbbell", label: "Інвентар: Гантелі з обох боків" },
-            db_shrugs: { title: "Шраги з гантелями", tip: "План: 3 підходи по 8-10 повторень", type: "dumbbell", label: "Інвентар: Гантелі в опущених руках" },
-            db_seated_press: { title: "Жим гантелей сидячи (вгору)", tip: "План: 3 підходи по 10-12 повторень", type: "dumbbell", label: "Інвентар: Гантелі (Вгору від плечей)" },
-            db_bench_press: { title: "Жим гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", type: "bench", label: "Інвентар: Гантелі + Горизонтальна лава" },
-            pushups: { title: "Віджимання від підлоги", tip: "План: 4 підходи (30-25-25-20 повторів)", type: "bodyweight", label: "Інвентар: Власна вага (Упор лежачи)" },
-            bench_dips: { title: "Віджимання від лави (табурета) на трицепс", tip: "План: 4 підходи (30-25-25-20 повторів)", type: "bench", label: "Інвентар: Опора ззаду (Лава/Стілець)" },
-            bb_row: { title: "Тяга штанги до пояса в нахилі", tip: "План: 4 підходи по 12-15 повторень", type: "barbell", label: "Інвентар: Штанга (Хват до себе/від себе)" },
-            bb_biceps_full: { title: "Підйом штанги на біцепс (повна амплітуда)", tip: "План: 4 підходи по 10 повторень", type: "barbell", label: "Інвентар: Штанга стоячи" },
-            bb_biceps_half: { title: "Підйом штанги на біцепс (наполовину)", tip: "План: 4 підходи по 10 повторень", type: "barbell", label: "Інвентар: Штанга (Часткова амплітуда)" },
-            db_biceps_half: { title: "Підйом гантелей на біцепс (наполовину)", type: "dumbbell", tip: "План: 4 підходи по 10 повторень", label: "Інвентар: Гантелі (Супінація наполовину)" },
-            db_concentration_curl: { title: "Жим гантелі на біцепс з упором в коліно", tip: "План: 4 підходи по 10-12 повторень", type: "dumbbell", label: "Інвентар: Одна гантель + упор ліктем" },
-            abs: { title: "Прес (скручування)", tip: "Опрацювання м'язів живота до відмови", type: "bodyweight", label: "Інвентар: Килимок (Власна вага)" },
+            single_leg_lunges: { title: "Випади на одній нозі", tip: "План: 3 підходи по 10-12 повторень", type: "dumbbell", label: "Гантелі (Асиметрично)" },
+            db_squats: { title: "Присідання з гантелями", tip: "План: 3 підходи по 8-10 повторень", type: "dumbbell", label: "Гантелі з обох боків" },
+            db_shrugs: { title: "Шраги з гантелями", tip: "План: 3 підходи по 8-10 повторень", type: "dumbbell", label: "Гантелі в опущених руках" },
+            db_seated_press: { title: "Жим гантелей сидячи (вгору)", tip: "План: 3 підходи по 10-12 повторень", type: "dumbbell", label: "Гантелі (Вгору від плечей)" },
+            db_bench_press: { title: "Жим гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", type: "bench", label: "Гантелі + Горизонтальна лава" },
+            pushups: { title: "Віджимання від підлоги", tip: "План: 4 підходи (30-25-25-20 повторів)", type: "bodyweight", label: "Власна вага (Упор лежачи)" },
+            bench_dips: { title: "Віджимання від лави (табурета) на трицепс", tip: "План: 4 підходи (30-25-25-20 повторів)", type: "bench", label: "Опора ззаду (Лава/Стілець)" },
+            bb_row: { title: "Тяга штанги до пояса в нахилі", tip: "План: 4 підходи по 12-15 повторень", type: "barbell", label: "Штанга в нахилі" },
+            bb_biceps_full: { title: "Підйом штанги на біцепс (повна амплітуда)", tip: "План: 4 підходи по 10 повторень", type: "barbell", label: "Штанга стоячи (На біцепс)" },
+            bb_biceps_half: { title: "Підйом штанги на біцепс (наполовину)", tip: "План: 4 підходи по 10 повторень", type: "barbell", label: "Штанга (Часткова амплітуда)" },
+            db_biceps_half: { title: "Підйом гантелей на біцепс (наполовину)", type: "dumbbell", tip: "План: 4 підходи по 10 повторень", label: "Гантелі (Нижня/Верхня половина)" },
+            db_concentration_curl: { title: "Жим гантелі на біцепс з упором в коліно", tip: "План: 4 підходи по 10-12 повторень", type: "dumbbell", label: "Одна гантель + упор ліктем" },
+            abs: { title: "Прес (скручування)", tip: "Опрацювання м'язів живота до відмови", type: "bodyweight", label: "Килимок (Власна вага)" },
             
-            sumo_squat: { title: "Присідання сумо з однією гантеллю", tip: "План: 4 підходи по 10 повторень", type: "dumbbell", label: "Інвентар: Одна важка гантель по центру" },
-            db_front_raise: { title: "Підйом гантелей перед собою", tip: "План: 4 підходи по 12-15 повторень", type: "dumbbell", label: "Інвентар: Гантелі (Фронтальна дельта)" },
-            db_lateral_raise: { title: "Підйом гантелей в сторони", tip: "План: 4 підходи по 12-15 повторень", type: "dumbbell", label: "Інвентар: Гантелі (Середня дельта)" },
-            bb_upright_row: { title: "Підйом штанги до грудей 'Вертоліт'", tip: "План: 4 підходи по 10 повторень", type: "barbell", label: "Інвентар: Штанга (Вузький хват до підборіддя)" },
-            romanian_deadlift: { title: "Станова тяга на прямих ногах", tip: "План: 4 підходи по 10-12 повторень", type: "barbell", label: "Інвентар: Штанга / Важкі гантелі" },
-            db_flyes: { title: "Розведення гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", type: "bench", label: "Інвентар: Гантелі (Розведення на лаві)" },
-            one_arm_db_row: { title: "Тяга гантелі однією рукою в нахилі", tip: "План: 4 підходи по 12-15 повторень", type: "dumbbell", label: "Інвентар: Одна гантель + опора на коліно" },
-            db_hammer_curl: { title: '«Молоток»: підйом гантелей на біцепс', tip: "План: 4 підходи по 10-12 повторень", type: "dumbbell", label: "Інвентар: Гантелі хватом 'Нейтральний'" },
-            db_triceps_extension: { title: "Підйом гантелі на трицепс через голову", tip: "План: 4 підходи по 10-12 повторень", type: "dumbbell", label: "Інвентар: Одна гантель (З-за голови двома руками)" }
+            sumo_squat: { title: "Присідання сумо з однією гантеллю", tip: "План: 4 підходи по 10 повторень", type: "dumbbell", label: "Одна важка гантель по центру" },
+            db_front_raise: { title: "Підйом гантелей перед собою", tip: "План: 4 підходи по 12-15 повторень", type: "dumbbell", label: "Гантелі перед собою" },
+            db_lateral_raise: { title: "Підйом гантелей в сторони", tip: "План: 4 підходи по 12-15 повторень", type: "dumbbell", label: "Гантелі в сторони" },
+            bb_upright_row: { title: "Підйом штанги до грудей 'Вертоліт'", tip: "План: 4 підходи по 10 повторень", type: "barbell", label: "Штанга вузьким хватом" },
+            romanian_deadlift: { title: "Станова тяга на прямих ногах", tip: "План: 4 підходи по 10-12 повторень", type: "barbell", label: "Штанга / Важкі гантелі" },
+            db_flyes: { title: "Розведення гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", type: "bench", label: "Гантелі (Розведення на лаві)" },
+            one_arm_db_row: { title: "Тяга гантелі однією рукою в нахилі", tip: "План: 44 х 12-15", type: "dumbbell", label: "Тяга однією рукою в нахилі" },
+            db_hammer_curl: { title: '«Молоток»: підйом гантелей на біцепс', tip: "План: 4 підходи по 10-12 повторень", type: "dumbbell", label: "Гантелі хватом 'Молоток'" },
+            db_triceps_extension: { title: "Підйом гантелі на трицепс через голову", tip: "План: 4 підходи по 10-12 повторень", type: "dumbbell", label: "Гантель з-за голови" }
         };
 
         let timerInterval = null;
         let currentDay = 'dayA'; 
         
-        let globalState = {
-            dayA: [],
-            dayB: []
-        };
+        let globalState = { dayA: [], dayB: [] };
 
         window.onload = function() {
-            const savedData = localStorage.getItem('powerLogWorkoutData_v4');
+            // Новий ключ localStorage_v5 змусить браузер забути старі баговані записи
+            const savedData = localStorage.getItem('powerLogWorkoutData_v5');
             if (savedData) {
                 globalState = JSON.parse(savedData);
             }
@@ -417,7 +412,7 @@
         };
 
         function saveToLocalStorage() {
-            localStorage.setItem('powerLogWorkoutData_v4', JSON.stringify(globalState));
+            localStorage.setItem('powerLogWorkoutData_v5', JSON.stringify(globalState));
         }
 
         function switchDay(dayKey) {
@@ -533,7 +528,6 @@
                     `;
                 });
 
-                // Витягуємо відповідний код SVG-іконки з нашого внутрішнього сховища
                 const activeSvg = svgIcons[dbData.type] || svgIcons.dumbbell;
 
                 const cardHTML = `
