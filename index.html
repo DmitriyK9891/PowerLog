@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PowerLog — Тренувальний Щоденник</title>
+    <title>PowerLog Pro — Твій Щоденник Тренувань</title>
     <style>
         :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --accent-color: #00adb5;
-            --text-color: #eeeeee;
-            --text-muted: #95a5a6;
+            --bg-color: #0b0c10;
+            --card-bg: #1f2833;
+            --accent-color: #45f3ff;
+            --accent-muted: #1f6e75;
+            --text-color: #c5c6c7;
+            --text-light: #ffffff;
+            --text-muted: #66fcf1;
             --success-color: #2ecc71;
             --danger-color: #e74c3c;
         }
@@ -21,10 +23,11 @@
             color: var(--text-color);
             margin: 0;
             padding: 15px;
-            padding-bottom: 140px;
+            padding-bottom: 150px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            -webkit-font-smoothing: antialiased;
         }
 
         .container {
@@ -32,122 +35,217 @@
             max-width: 500px;
             display: flex;
             flex-direction: column;
-            gap: 15px; /* Запобігає злипанню блоків */
+            gap: 20px;
         }
 
         header {
-            text-align: center;
-            margin-bottom: 5px;
+            text-align: left;
+            margin-top: 10px;
         }
 
         header h1 {
             margin: 0;
-            color: var(--accent-color);
-            font-size: 28px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            color: var(--text-light);
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
 
         header p {
-            color: var(--text-muted);
-            margin: 5px 0 0 0;
+            color: #8d99ae;
+            margin: 3px 0 0 0;
+            font-size: 13px;
+        }
+
+        .section-title {
             font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8d99ae;
+            margin-bottom: 8px;
+            font-weight: 700;
         }
 
-        .day-switcher {
+        /* Горизонтальний список програм з AppStore */
+        .programs-scroll {
             display: flex;
-            background-color: var(--card-bg);
-            padding: 5px;
-            border-radius: 10px;
-            gap: 5px;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
         }
 
-        .tab-btn {
-            flex: 1;
+        .programs-scroll::-webkit-scrollbar {
+            height: 4px;
+        }
+        .programs-scroll::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 10px;
+        }
+
+        .program-card {
+            flex: 0 0 200px;
+            background: linear-gradient(135deg, #1f2833 0%, #151a21 100%);
+            border: 1px solid #2d3748;
+            border-radius: 16px;
+            padding: 15px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            scroll-snap-align: start;
+        }
+
+        .program-card.active {
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 20px rgba(69, 243, 255, 0.15);
+        }
+
+        .program-card h3 {
+            margin: 0 0 6px 0;
+            color: var(--text-light);
+            font-size: 16px;
+            font-weight: 700;
+            padding-right: 20px;
+        }
+
+        .program-card p {
+            margin: 0;
+            font-size: 12px;
+            color: #8d99ae;
+        }
+
+        .btn-delete-program {
+            position: absolute;
+            top: 12px;
+            right: 12px;
             background: none;
             border: none;
-            color: var(--text-muted);
-            padding: 12px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 8px;
+            color: var(--danger-color);
             cursor: pointer;
-            transition: all 0.3s ease;
+            font-size: 14px;
+            padding: 0;
+            opacity: 0.6;
         }
+        .btn-delete-program:hover { opacity: 1; }
 
-        .tab-btn.active {
-            background-color: var(--accent-color);
-            color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        /* Адаптивна панель додавання */
-        .add-exercise-panel {
-            background-color: var(--card-bg);
+        .btn-create-program {
+            background-color: #151a21;
             border: 1px dashed var(--accent-color);
+            color: var(--accent-color);
             border-radius: 12px;
+            padding: 12px;
+            width: 100%;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        /* Дні тренувань */
+        .days-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .day-tab {
+            background-color: #151a21;
+            border: 1px solid #2d3748;
+            color: #8d99ae;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .day-tab.active {
+            background-color: var(--accent-color);
+            color: #000;
+            border-color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        .btn-add-day {
+            background: none;
+            border: 1px dashed #444;
+            color: #8d99ae;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        /* Панель додавання вправ */
+        .add-exercise-panel {
+            background-color: #151a21;
+            border: 1px solid #2d3748;
+            border-radius: 16px;
             padding: 15px;
             display: flex;
-            flex-direction: row; /* На ПК в один ряд */
             gap: 10px;
         }
 
         select, .btn-main {
             font-size: 14px;
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: none;
-            height: 46px;
+            height: 48px;
             box-sizing: border-box;
         }
 
         select {
             flex-grow: 1;
-            background-color: #2d2d2d;
-            color: white;
-            border: 1px solid #444;
+            background-color: #1f2833;
+            color: var(--text-light);
+            border: 1px solid #2d3748;
             width: 100%;
         }
 
         .btn-main {
             background-color: var(--accent-color);
-            color: white;
-            font-weight: bold;
+            color: #000;
+            font-weight: 700;
             cursor: pointer;
-            min-width: 100px;
+            min-width: 110px;
         }
 
         #workoutContainer {
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Відступи між картками вправ */
+            gap: 20px;
         }
 
         .exercise-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            position: relative;
+            background-color: #151a21;
+            border: 1px solid #2d3748;
+            border-radius: 16px;
+            padding: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
         }
 
         .exercise-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .exercise-title {
-            font-size: 17px;
-            font-weight: bold;
-            line-height: 1.3;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-light);
         }
 
         .exercise-tip {
             font-size: 12px;
-            color: var(--accent-color);
-            margin-bottom: 10px;
+            color: #8d99ae;
+            margin-bottom: 12px;
         }
 
         .btn-delete {
@@ -156,7 +254,7 @@
             color: var(--danger-color);
             cursor: pointer;
             font-size: 16px;
-            margin-right: 10px;
+            margin-right: 12px;
         }
 
         .btn-info {
@@ -164,39 +262,31 @@
             border: 1px solid var(--accent-color);
             color: var(--accent-color);
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
+            font-weight: 700;
+            font-size: 13px;
         }
 
         .exercise-guide {
             display: none;
-            background-color: #151515;
+            background-color: #0b0c10;
             border-left: 3px solid var(--accent-color);
             padding: 12px;
-            margin: 12px 0;
-            border-radius: 4px;
+            margin: 14px 0;
+            border-radius: 6px;
             font-size: 13px;
             line-height: 1.5;
-            text-align: left;
         }
 
-        .guide-item {
-            margin-bottom: 8px;
-        }
-
-        .guide-item:last-child {
-            margin-bottom: 0;
-        }
-
+        .guide-item { margin-bottom: 8px; }
+        .guide-item:last-child { margin-bottom: 0; }
         .guide-title {
             color: var(--accent-color);
-            font-weight: bold;
-            text-transform: uppercase;
+            font-weight: 700;
             font-size: 11px;
-            letter-spacing: 0.5px;
+            text-transform: uppercase;
             display: block;
             margin-bottom: 2px;
         }
@@ -208,57 +298,57 @@
         }
 
         .sets-table th {
-            color: var(--text-muted);
+            color: #8d99ae;
             font-size: 12px;
             text-align: left;
             padding-bottom: 8px;
+            font-weight: 600;
         }
 
-        .set-row {
-            border-top: 1px solid #2d2d2d;
-        }
-
-        .set-row td {
-            padding: 8px 0;
-        }
+        .set-row { border-top: 1px solid #2d3748; }
+        .set-row td { padding: 10px 0; }
 
         .input-field {
-            background-color: #2d2d2d;
-            border: 1px solid #444;
+            background-color: #1f2833;
+            border: 1px solid #2d3748;
             color: #fff;
-            padding: 6px;
-            border-radius: 6px;
+            padding: 8px;
+            border-radius: 8px;
             width: 55px;
             text-align: center;
             font-size: 14px;
+            font-weight: 600;
         }
 
         .btn-check {
-            background-color: #2d2d2d;
-            border: 1px solid #444;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
+            background-color: #1f2833;
+            border: 1px solid #2d3748;
+            color: var(--text-color);
+            padding: 8px 14px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 700;
             min-width: 65px;
+            transition: all 0.1s;
         }
 
         .btn-check.done {
             background-color: var(--success-color);
             border-color: var(--success-color);
+            color: #000;
         }
 
         .btn-add-set {
             background: none;
-            border: 1px dashed var(--text-muted);
-            color: var(--text-muted);
+            border: 1px dashed #444;
+            color: #8d99ae;
             width: 100%;
-            padding: 8px;
-            margin-top: 10px;
-            border-radius: 6px;
+            padding: 10px;
+            margin-top: 12px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 13px;
+            font-weight: 600;
         }
 
         .timer-panel {
@@ -266,19 +356,19 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background-color: #1a1a1a;
-            border-top: 2px solid var(--accent-color);
+            background-color: #151a21;
+            border-top: 1px solid #2d3748;
             padding: 15px;
             display: flex;
             justify-content: space-around;
             align-items: center;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
             z-index: 100;
         }
 
         .timer-display {
-            font-size: 26px;
-            font-weight: bold;
+            font-size: 28px;
+            font-weight: 700;
             font-family: monospace;
             color: var(--accent-color);
         }
@@ -289,43 +379,34 @@
         }
 
         .timer-btn {
-            background-color: var(--accent-color);
-            border: none;
-            color: #fff;
-            padding: 10px 16px;
-            border-radius: 6px;
-            font-weight: bold;
+            background-color: #1f2833;
+            border: 1px solid #2d3748;
+            color: var(--text-light);
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-weight: 700;
             cursor: pointer;
         }
 
         .btn-clear-all {
-            background-color: #2a2a2a;
-            color: var(--text-muted);
-            border: 1px solid #444;
+            background: none;
+            color: var(--danger-color);
+            border: 1px solid rgba(231, 76, 61, 0.3);
             width: 100%;
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 13px;
-            margin-top: 10px;
+            font-weight: 600;
+            margin-top: 5px;
         }
 
-        @keyframes blink {
-            50% { opacity: 0.3; }
-        }
+        @keyframes blink { 50% { opacity: 0.3; } }
 
-        /* Мобільна адаптивність (Екрани менше 420px) */
         @media (max-width: 420px) {
-            .add-exercise-panel {
-                flex-direction: column; /* Список та кнопка стають один під одним */
-            }
-            .btn-main {
-                width: 100%;
-            }
-            body {
-                padding: 10px;
-                padding-bottom: 140px;
-            }
+            .add-exercise-panel { flex-direction: column; }
+            .btn-main { width: 100%; }
+            body { padding: 10px; padding-bottom: 150px; }
         }
     </style>
 </head>
@@ -333,13 +414,20 @@
 
     <div class="container">
         <header>
-            <h1>PowerLog</h1>
-            <p>Твій тренувальний щоденник</p>
+            <h1>PowerLog Pro</h1>
+            <p>Твої кастомні програми тренувань</p>
         </header>
 
-        <div class="day-switcher">
-            <button id="btnDayA" class="tab-btn active" onclick="switchDay('dayA')">Тренування 1</button>
-            <button id="btnDayB" class="tab-btn" onclick="switchDay('dayB')">Тренування 2</button>
+        <div>
+            <div class="section-title">Мої Програми</div>
+            <div class="programs-scroll" id="programsContainer"></div>
+        </div>
+
+        <button class="btn-create-program" onclick="createNewProgram()">+ Створити власну програму</button>
+
+        <div>
+            <div class="section-title" id="daysTitle">Дні Тренування</div>
+            <div class="days-container" id="daysTabsContainer"></div>
         </div>
 
         <div class="add-exercise-panel">
@@ -377,314 +465,309 @@
                     <option value="abs">Прес</option>
                 </optgroup>
             </select>
-            <button class="btn-main" onclick="addExercise()">+ Додати</button>
+            <button class="btn-main" onclick="addExercise()">+ Вправу</button>
         </div>
 
         <div id="workoutContainer"></div>
         
-        <button class="btn-clear-all" onclick="clearCurrentDay()">Очистити цей день</button>
+        <button class="btn-clear-all" onclick="clearCurrentDay()">Видалити всі вправи з цього дня</button>
     </div>
 
     <div class="timer-panel">
         <div>
-            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Відпочинок</div>
+            <div style="font-size: 10px; color: #8d99ae; text-transform: uppercase; font-weight: 700;">Відпочинок</div>
             <div class="timer-display" id="timerDisplay">00:00</div>
         </div>
         <button class="timer-btn" onclick="startTimer(60)">60 с</button>
         <button class="timer-btn" onclick="startTimer(90)">90 с</button>
-        <button class="timer-btn" style="background-color: #333;" onclick="stopTimer()">Стоп</button>
+        <button class="timer-btn" style="background-color: #1a1a1a;" onclick="stopTimer()">Стоп</button>
     </div>
 
     <script>
-        // Повністю вичитана база даних без орфографічних помилок та русизмів
         const exerciseDB = {
-            single_leg_lunges: { 
-                title: "Випади на одній нозі", 
-                tip: "План: 3 підходи по 10-12 повторень", 
-                eq: "Дві гантелі в руках.",
-                pos: "Одна нога попереду, інша ззаду на носку. Спина рівна, погляд спрямований вперед.",
-                tech: "Опускайся вертикально вниз, щоб коліно передньої ноги не виходило за лінію носка. Основна вага тіла тисне на п'яту передньої ноги. Опускайся до паралелі стегна з підлогою, після чого піднімайся потужним рухом вгору."
-            },
-            db_squats: { 
-                title: "Присідання з гантелями", 
-                tip: "План: 3 підходи по 8-10 повторень", 
-                eq: "Дві гантелі в опущених руках або утримуються на плечах.",
-                pos: "Ноги на ширині плечей, носки розгорнуті в сторони на 15-30 градусів.",
-                tech: "Починай рух з відведення тазу назад, ніби сідаєш на стілець. Тримай коліна в напрямку носків, не завалюй їх всередину. Спина пряма, з природним прогином у попереку. Присідай до паралелі та вставай, штовхаючись п'ятами."
-            },
-            db_shrugs: { 
-                title: "Шраги з гантелями", 
-                tip: "План: 3 підходи по 8-10 повторень", 
-                eq: "Важкі гантелі з боків корпусу.",
-                pos: "Стоячи, ноги на ширині стегон, руки повністю випрямлені в ліктях.",
-                tech: "Ізольованим рухом піднімай плечі вгору в напрямку вух. Не згинай лікті і в жодному разі не обертай плечима по колу, щоб не травмувати суглоби. Роби коротку паузу в верхній точці, після чого плавно опускай вагу."
-            },
-            db_seated_press: { 
-                title: "Жим гантелей сидячи (вгору)", 
-                tip: "План: 3 підходи по 10-12 повторень", 
-                eq: "Лава зі спинкою під кутом 80-90 градусів, дві гантелі.",
-                pos: "Сидячи, щільно притисни поперек і лопатки до спинки лави. Гантелі на рівні вух, лікті розгорнуті в сторони.",
-                tech: "Потужним рухом витискай гантелі вгору по дугоподібній траєкторії. Не блокуй лікті повністю у верхній точці та не стукай гантелями одна об одну. Плавно опускай снаряди до рівня вух або підборіддя."
-            },
-            db_bench_press: { 
-                title: "Жим гантелей лежачи", 
-                tip: "План: 4 підходи по 10-12 повторень", 
-                eq: "Горизонтальна лава, дві гантелі.",
-                pos: "Лежачи на лаві, стопи жорстко впираються в підлогу. Лопатки максимально зведені.",
-                tech: "Опускай гантелі до рівня грудей, тримаючи кут у ліктях близько 45-60 градусів від корпусу (не розводь лікті строго перпендикулярно). Витискай гантелі вгору, зводячи їх над центром грудей."
-            },
-            pushups: { 
-                title: "Віджимання від підлоги", 
-                tip: "План: 4 підходи (30-25-25-20 повторень)", 
-                eq: "Власна вага тіла.",
-                pos: "Упор лежачи. Руки розташовані трохи ширше плечей. Тіло утворює одну пряму лінію (прес і сідниці напружені, таз не провисає вниз).",
-                tech: "Опускайся до торкання підлоги грудьми. Лікті спрямовані назад під кутом 45 градусів від корпусу. Потужно виштовхуй себе вгору, зберігаючи рівне положення тіла."
-            },
-            bench_dips: { 
-                title: "Віджимання від лави на трицепс", 
-                tip: "План: 4 підходи (30-25-25-20 повторень)", 
-                eq: "Лава, стілець або табурет (можна класти додаткову вагу на стегна).",
-                pos: "Опора руками ззаду за край лави, ноги витягнуті вперед перед собою.",
-                tech: "Опускай таз вниз уздовж лави, згинаючи лікті до кута 90 градусів. Лікті не повинні розходитися в сторони — тримай їх паралельно один одному. Зусиллям трицепсів витискай себе вгору до повного випрямлення рук."
-            },
-            bb_row: { 
-                title: "Тяга штанги до пояса", 
-                tip: "План: 4 підходи по 12-15 повторень", 
-                eq: "Штанга, хват зверху або знизу трохи ширше плечей.",
-                pos: "Нахил корпусу вперед приблизно на 45-60 градусів, коніла злегка зігнуті, спина зафіксована ідеально прямою.",
-                tech: "Тягни гриф штанги вздовж стегон до нижньої частини живота (в район пупка). Рух починається строго зі зведення лопаток і ведення ліктів назад-вгору. Не розгойдуй корпус під час руху."
-            },
-            bb_biceps_full: { 
-                title: "Підйом штанги на біцепс (повний)", 
-                tip: "План: 4 підходи по 10 повторень", 
-                eq: "Штанга з прямим або EZ-грифом. Хват знизу на ширині плечей.",
-                pos: "Стоячи рівно, плечі опущені, лікті щільно притиснуті до боків корпусу.",
-                tech: "За рахунок сили біцепсів піднімай штангу вгору до рівня верхньої частини грудей. Лікті залишаються абсолютно нерухомими і не виходять вперед! Опускай штангу повільно та підконтрольно, не кидай її в нижній точці."
-            },
-            bb_biceps_half: { 
-                title: "Підйом штанги на біцепс (наполовину)", 
-                tip: "План: 4 підходи по 10 повторень", 
-                eq: "Штанга. Хват знизу на ширині плечей.",
-                pos: "Стоячи рівно, лікті зафіксовані з боків тулуба.",
-                tech: "Робота в частковій амплітуді для максимального пампінгу. Рух виконується або в нижній половині (від стегон строго до паралелі передпліч із підлогою), або у верхній половині (від паралелі вгору до грудей)."
-            },
-            db_biceps_half: { 
-                title: "Підйом гантелей на біцепс (наполовину)", 
-                tip: "План: 4 підходи по 10 повторень", 
-                eq: "Дві гантелі.",
-                pos: "Стоячи рівно або сидячи на лаві. Руки опущені, долоні спочатку розгорнуті всередину (нейтральний хват).",
-                tech: "Піднімай гантелі до кута 90 градусів у ліктях, одночасно розгортаючи кисті долонями вгору (супінація). Працюй строго в обмеженій амплітуді для утримання постійної напруги в м'язах."
-            },
-            db_concentration_curl: { 
-                title: "Підйом гантелі на біцепс з упором в коліно", 
-                tip: "План: 4 підходи по 10-12 повторень", 
-                eq: "Одна гантель, стілець або лава.",
-                pos: "Сидячи на лаві, ноги широко розставлені. Лікоть робочої руки впирається у внутрішню частину стегна ближче до коліна.",
-                tech: "Повністю ізольованим рухом згинайте руку з гантеллю в напрямку плеча. Корпус залишається нерухомим, працює виключно біцепс. У верхній точці зафіксуй вагу на секунду і плавно розгинай руку."
-            },
-            abs: { 
-                title: "Прес (скручування)", 
-                tip: "Опрацювання м'язів живота до відмови", 
-                eq: "Килимок для фітнесу.",
-                pos: "Лежачи на спині, ноги зігнуті в колінах, стопи щільно стоять на підлозі. Руки тримай біля скронь (не зчеплюй пальці в замок за шиєю).",
-                tech: "За рахунок зусилля м'язів преса скручуй верхню частину корпусу вперед, відриваючи від підлоги лише лопатки. Поперек має бути постійно притиснутим до підлоги! Не тягни себе руками за голову вгору."
-            },
-            sumo_squat: { 
-                title: "Присідання сумо з однією гантеллю", 
-                tip: "План: 4 підходи по 10 повторень", 
-                eq: "Одна важка гантель, яку утримують обома руками за верхній диск.",
-                pos: "Ноги виставлені значно ширше плечей, носки сильно розгорнуті в сторони (приблизно під кутом 45 градусів).",
-                tech: "Присідай глибоко, розводячи коліна чітко в напрямку носків. Спину намагайся тримати максимально вертикально. Опускайся до моменту, поки стегна не будуть паралельні підлозі, після чого вставай за рахунок зусилля сідниць."
-            },
-            db_front_raise: { 
-                title: "Підйом гантелей перед собою", 
-                tip: "План: 4 підходи по 12-15 повторень", 
-                eq: "Дві гантелі хватом зверху (долоні спрямовані до тіла).",
-                pos: "Стоячи рівно, коліна ледь розслаблені, спина пряма.",
-                tech: "Почергово або одночасно піднімай трохи зігнуті в ліктях руки вперед перед собою до рівня очей. Уникай розгойдування корпусу та допомоги ногами — рух виконує строго передня дельта."
-            },
-            db_lateral_raise: { 
-                title: "Підйом гантелей в сторони", 
-                tip: "План: 4 підходи по 12-15 повторень", 
-                eq: "Дві легкі або середні гантелі.",
-                pos: "Стоячи рівно, корпус злегка нахилений вперед (буквально на 5-10 градусів), гантелі утримуються перед стегнами.",
-                tech: "Піднімай гантелі через сторони вгору. Рух ведеться ліктями, а не кистями (у верхній точці лікоть має бути на рівні плеча або трохи вище кисті, мізинець ніби розгортається вгору). Підйом виконується до рівня плечей."
-            },
-            bb_upright_row: { 
-                title: "Підйом штанги до грудей 'Вертоліт'", 
-                tip: "План: 4 підходи по 10 повторень", 
-                eq: "Штанга, вузький або середній хват зверху.",
-                pos: "Стоячи рівно, гриф штанги вільно лежить на стегнах.",
-                tech: "Тягни штангу вертикально вгору вздовж тулуба до рівня підборіддя. Направляй рух ліктями — вони завжди мають першими йти вгору і бути вище грифу. Не піднімай плечі, концентруйся на середній дельті."
-            },
-            romanian_deadlift: { 
-                title: "Станова тяга на прямих ногах", 
-                tip: "План: 4 підходи по 10-12 повторень", 
-                eq: "Штанга або дві важкі гантелі.",
-                pos: "Ноги на ширині стегон, стопи паралельні. Спина жорстко зафіксована з легким анатомічним прогином.",
-                tech: "Починай рух строго з відведення тазу назад. Снаряд має буквально ковзати вздовж ніг. Опускайся приблизно до середини гомілки, відчуваючи сильне розтягнення задньої поверхні стегна. Повертайся у вихідне положення зусиллям сідниць."
-            },
-            db_flyes: { 
-                title: "Розведення гантелей лежачи", 
-                tip: "План: 4 підходи по 10-12 повторень", 
-                eq: "Горизонтальна лава, дві гантелі.",
-                pos: "Лежачи на лаві, гантелі зведені над грудьми, долоні дивляться одна на одну (нейтральний хват). Лікті злегка зігнуті.",
-                tech: "Плавно розводь гантелі в сторони по широкій дузі, відчуваючи розтягування грудних м'язів. Фіксуй кут у ліктях незмінним протягом усього руху! Повертай руки вгору по тій же траєкторії, ніби обіймаєш велике дерево."
-            },
-            one_arm_db_row: { 
-                title: "Тяга гантелі однією рукою в нахилі", 
-                tip: "План: 4 підходи по 12-15 повторень", 
-                eq: "Одна гантель, лава або надійна горизонтальна опора.",
-                pos: "Одне коліно та однойменна долоня фіксуються на лаві. Корпус паралельний підлозі. Інша нога на підлозі, рука з гантеллю опущена вниз.",
-                tech: "Тягни гантель у напрямку до стегна або кишені (рух по дузі назад-вгору). Концентруйся на веденні ліктя вгору та максимальному притисканні його до тулуба. У верхній точці максимально зводь робочу лопатку."
-            },
-            db_hammer_curl: { 
-                title: "«Молоток»: підйом гантелей", 
-                tip: "План: 4 підходи по 10-12 повторень", 
-                eq: "Дві гантелі.",
-                pos: "Стоячи рівно або сидячи на лаві. Руки витягнуті вздовж тіла, долоні спрямовані всередину до корпусу.",
-                tech: "Піднімай гантелі вгору до плечей, зберігаючи нейтральний хват (долоні не розгортаються, вони дивляться одна на одну протягом усього підйому). Акцент на роботу плечопроменевого м'яза та біцепса."
-            },
-            db_triceps_extension: { 
-                title: "Підйом гантелі на triцепс з-за голови", 
-                tip: "План: 4 підходи по 10-12 повторень", 
-                eq: "Одна гантель, яку тримають обома руками під верхній внутрішній диск.",
-                pos: "Сидячи на лаві або стоячи рівно. Руки з гантеллю випрямлені строго над головою.",
-                tech: "Утримуючи лікті якомога ближче до голови (не дозволяй їм розходитися в сторони), плавно опускай гантель за голову до повного згинання рук. Зусиллям трицепсів потужно випрямляй руки вгору."
-            }
+            single_leg_lunges: { title: "Випади на одній нозі", tip: "План: 3 підходи по 10-12 повторень", eq: "Дві гантелі в руках.", pos: "Одна нога попереду, інша ззаду на носку. Спина рівна, погляд спрямований вперед.", tech: "Опускайся вертикально вниз, щоб коліно передньої ноги не виходило за лінію носка. Основна вага тіла тисне на п'яту передньої ноги. Опускайся до паралелі стегна з підлогою, після чого піднімайся потужним рухом вгору." },
+            db_squats: { title: "Присідання з гантелями", tip: "План: 3 підходи по 8-10 повторень", eq: "Дві гантелі в опущених руках або утримуються на плечах.", pos: "Ноги на ширині плечей, носки розгорнуті в сторони на 15-30 градусів.", tech: "Починай рух з відведення тазу назад, ніби сідаєш на стілець. Тримай коліна в напрямку носків. Спина пряма. Присідай до паралелі та вставай, штовхаючись п'ятами." },
+            db_shrugs: { title: "Шраги з гантелями", tip: "План: 3 підходи по 8-10 повторень", eq: "Важкі гантелі з боків корпусу.", pos: "Стоячи, ноги на ширині стегон, руки повністю випрямлені в ліктях.", tech: "Ізольованим рухом піднімай плечі вгору в напрямку вух. Не згинай лікті і не обертай плечима по колу. Роби коротку паузу в верхній точці, після чого плавно опускай вагу." },
+            db_seated_press: { title: "Жим гантелей сидячи (вгору)", tip: "План: 3 підходи по 10-12 повторень", eq: "Лава зі спинкою під кутом 80-90 градусів, дві гантелі.", pos: "Сидячи, щільно притисни поперек і лопатки до спинки лави. Гантелі на рівні вух.", tech: "Потужним рухом витискай гантелі вгору по дугоподібній траєкторії. Не блокуй лікті повністю у верхній точці. Плавно опускай снаряди до рівня вух або підборіддя." },
+            db_bench_press: { title: "Жим гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", eq: "Горизонтальна лава, дві гантелі.", pos: "Лежачи на лаві, стопи жорстко впираються в підлогу. Лопатки максимально зведені.", tech: "Опускай гантелі до рівня грудей, тримаючи кут у ліктях близько 45-60 градусів від корпусу. Витискай гантелі вгору, зводячи їх над центром грудей." },
+            pushups: { title: "Віджимання від підлоги", tip: "План: 4 підходи (30-25-25-20 повторень)", eq: "Власна вага тіла.", pos: "Упор лежачи. Руки розташовані трохи ширше плечей. Тіло утворює одну пряму лінію.", tech: "Опускайся до торкання підлоги грудьми. Лікті спрямовані назад під кутом 45 градусів від корпусу. Потужно виштовхуй себе вгору." },
+            bench_dips: { title: "Віджимання від лави на трицепс", tip: "План: 4 підходи (30-25-25-20 повторень)", eq: "Лава або стілець.", pos: "Опора руками ззаду за край лави, ноги витягнуті вперед перед собою.", tech: "Опускай таз вниз уздовж лави, згинаючи лікті до кута 90 градусів. Лікті не повинні розходитися в сторони. Зусиллям трицепсів витискай себе вгору." },
+            bb_row: { title: "Тяга штанги до пояса", tip: "План: 4 підходи по 12-15 повторень", eq: "Штанга, хват зверху або знизу трохи ширше плечей.", pos: "Нахил корпусу вперед приблизно на 45-60 градусів, коліна злегка зігнуті, спина ідеально пряма.", tech: "Тягни гриф штанги вздовж стегон до нижньої частини живота. Рух починається зі зведення лопаток і ведення ліктів назад-вгору." },
+            bb_biceps_full: { title: "Підйом штанги на біцепс (повний)", tip: "План: 4 підходи по 10 повторень", eq: "Штанга з прямим або EZ-грифом. Хват знизу.", pos: "Стоячи рівно, плечі опущені, лікті щільно притиснуті до боків корпусу.", tech: "За рахунок сили біцепсів піднімай штангу вгору до рівня верхньої частини грудей. Лікті залишаються абсолютно нерухомими! Опускай штангу повільно та підконтрольно." },
+            bb_biceps_half: { title: "Підйом штанги на біцепс (наполовину)", tip: "План: 4 підходи по 10 повторень", eq: "Штанга. Хват знизу на ширині плечей.", pos: "Стоячи рівно, лікті зафіксовані з боків тулуба.", tech: "Робота в частковій амплітуді. Рух виконується або в нижній половині (від стегон до паралелі з підлогою), або у верхній половині (від паралелі вгору до грудей)." },
+            db_biceps_half: { title: "Підйом гантелей на біцепс (наполовину)", tip: "План: 4 підходи по 10 повторень", eq: "Дві гантелі.", pos: "Стоячи рівно або сидячи на лаві. Руки опущені, долоні спочатку розгорнуті всередину.", tech: "Піднімай гантелі до кута 90 градусів у ліктях, одночасно розгортаючи кисті долонями вгору (супінація). Робота в обмеженій амплітуді." },
+            db_concentration_curl: { title: "Підйом гантелі на біцепс з упором в коліно", tip: "План: 4 підходи по 10-12 повторень", eq: "Одна гантель, стілець або лава.", pos: "Сидячи на лаві, ноги широко розставлені. Лікоть робочої руки впирається у внутрішню частину стегна.", tech: "Повністю ізольованим рухом згинайте руку з гантеллю в напрямку плеча. Корпус залишається нерухомим, працює виключно біцепс." },
+            abs: { title: "Прес (скручування)", tip: "Опрацювання м'язів живота до відмови", eq: "Килимок для фітнесу.", pos: "Лежачи на спині, ноги зігнуті в колінах, стопи на підлозі. Руки тримай біля скронь.", tech: "За рахунок зусилля м'язів преса скручуй верхню частину корпусу вперед, відриваючи від підлоги лише лопатки. Поперек постійно притиснутий до підлоги." },
+            sumo_squat: { title: "Присідання сумо з однією гантеллю", tip: "План: 4 підходи по 10 повторень", eq: "Одна важка гантель, яку утримують обома руками за верхній диск.", pos: "Ноги виставлені значно ширше плечей, носки сильно розгорнуті в сторони (під кутом 45 градусів).", tech: "Присідай глибоко, розводячи коліна чітко в напрямку носків. Спину тримай максимально вертикально. Вставай за рахунок зусилля сідниць." },
+            db_front_raise: { title: "Підйом гантелей перед собою", tip: "План: 4 підходи по 12-15 повторень", eq: "Дві гантелі хватом зверху.", pos: "Стоячи рівно, коліна ледь розслаблені, спина пряма.", tech: "Піднімай трохи зігнуті в ліктях руки вперед перед собою до рівня очей. Уникай розгойдування корпусу — рух виконує строго передня дельта." },
+            db_lateral_raise: { title: "Підйом гантелей в сторони", tip: "План: 4 підходи по 12-15 повторень", eq: "Дві легкі або середні гантелі.", pos: "Стоячи рівно, корпус злегка нахилений вперед, гантелі утримуються перед стегнами.", tech: "Піднімай гантелі через сторони вгору. Рух ведеться ліктями, а не кистями (у верхній точці лікоть трохи вище кисті). Підйом виконується до рівня плечей." },
+            bb_upright_row: { title: "Підйом штанги до грудей 'Вертоліт'", tip: "План: 4 підходи по 10 повторень", eq: "Штанга, вузький або середній хват зверху.", pos: "Стоячи рівно, гриф штанги вільно лежить на стегнах.", tech: "Тягни штангу вертикально вгору вздовж тулуба до рівня підборіддя. Направляй рух ліктями — вони завжди мають першими йти вгору." },
+            romanian_deadlift: { title: "Станова тяга на прямих ногах", tip: "План: 4 підходи по 10-12 повторень", eq: "Штанга або дві важкі гантелі.", pos: "Ноги на ширині стегон. Спина жорстко зафіксована з легким анатомічним прогином.", tech: "Починай рух з відведення тазу назад. Снаряд має ковзати вздовж ніг. Опускайся приблизно до середини гомілки, після чого повертайся назад зусиллям сідниць." },
+            db_flyes: { title: "Розведення гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", eq: "Горизонтальна лава, дві гантелі.", pos: "Лежачи на лаві, гантелі зведені над грудьми, долоні дивляться одна на одну. Лікті злегка зігнуті.", tech: "Плавно розводь гантелі в сторони по широкій дузі. Фіксуй кут у ліктях незмінним протягом усього руху! Повертай руки вгору по тій же траєкторії." },
+            one_arm_db_row: { title: "Тяга гантелі однією рукою в нахилі", tip: "План: 4 підходи по 12-15 повторень", eq: "Одна гантель, лава або надійна опора.", pos: "Одне коліно та долоня на лаві. Корпус паралельний підлозі. Рука з гантеллю опущена.", tech: "Тягни гантель у напрямку до стегна. Концентруйся на веденні ліктя вгору та максимальному притисканні його до тулуба. Зводь робочу лопатку." },
+            db_hammer_curl: { title: "«Молоток»: підйом гантелей", tip: "План: 4 підходи по 10-12 повторень", eq: "Дві гантелі.", pos: "Стоячи рівно або відновлюючись на лаві. Руки витягнуті вздовж тіла, долоні всередину.", tech: "Піднімай гантелі вгору до плечей, зберігаючи нейтральний хват (долоні дивляться одна на одну). Акцент на роботу плечопроменевого м'яза." },
+            db_triceps_extension: { title: "Підйом гантелі на трицепс з-за голови", tip: "План: 4 підходи по 10-12 повторень", eq: "Одна гантель, яку тримають обома руками під верхній внутрішній диск.", pos: "Сидячи на лаві або стоячи рівно. Руки з гантеллю випрямлені над головою.", tech: "Утримуючи лікті близько до голови, плавно опускай гантель за голову до повного згинання рук. Зусиллям трицепсів випрямляй руки вгору." }
         };
 
-        let timerInterval = null;
-        let currentDay = 'dayA'; 
-        let globalState = { dayA: [], dayB: [] };
+        // НОВА ГНУЧКА СТРУКТУРА ДАНИХ (ПРОГРАМИ ТА ДЕНЬ)
+        let appState = {
+            activeProgramId: "prog_1",
+            activeDayIndex: 0,
+            programs: [
+                {
+                    id: "prog_1",
+                    title: "Full Body Сила",
+                    desc: "Гантелі + Штанга",
+                    days: [
+                        { name: "Тренування A", exercises: [] },
+                        { name: "Тренування B", exercises: [] }
+                    ]
+                },
+                {
+                    id: "prog_2",
+                    title: "Тільки гантелі",
+                    desc: "Домашній пресет",
+                    days: [
+                        { name: "День 1", exercises: [] }
+                    ]
+                }
+            ]
+        };
 
-        // НОВИЙ СУПЕР-КЛЮЧ ДЛЯ ПОВНОГО СКИНУТИХ СТАРИХ ДАНИХ ТА ВЕРСТКИ
-        const TARGET_KEY = 'powerLog_v9_final';
+        const STORAGE_KEY = "powerLog_v10_appstore_style";
+        let timerInterval = null;
 
         window.onload = function() {
-            // Зачищаємо абсолютно всі минулі версії
+            // Очищення старих лінійних баз даних
             localStorage.removeItem('powerLogWorkoutData_v5');
             localStorage.removeItem('powerLogWorkoutData_v6');
             localStorage.removeItem('powerLogWorkoutData_v7');
             localStorage.removeItem('powerLog_v8_descriptions');
-            
-            const savedData = localStorage.getItem(TARGET_KEY);
-            if (savedData) {
-                globalState = JSON.parse(savedData);
+            localStorage.removeItem('powerLog_v9_final');
+
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                appState = JSON.parse(saved);
             }
-            renderState();
+            renderApp();
         };
 
-        function saveToLocalStorage() {
-            localStorage.setItem(TARGET_KEY, JSON.stringify(globalState));
+        function saveState() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
         }
 
-        function switchDay(dayKey) {
-            currentDay = dayKey;
-            document.getElementById('btnDayA').classList.toggle('active', dayKey === 'dayA');
-            document.getElementById('btnDayB').classList.toggle('active', dayKey === 'dayB');
-            renderState();
+        // Керування програмами
+        function createNewProgram() {
+            const name = prompt("Введи назву нової програми тренувань:");
+            if (!name) return;
+            const newId = "prog_" + Date.now();
+            appState.programs.push({
+                id: newId,
+                title: name,
+                desc: "Власна програма",
+                days: [{ name: "День 1", exercises: [] }]
+            });
+            appState.activeProgramId = newId;
+            appState.activeDayIndex = 0;
+            saveState();
+            renderApp();
+        }
+
+        function deleteProgram(id, event) {
+            event.stopPropagation(); // Щоб не спрацював клік по картці
+            if (appState.programs.length <= 1) {
+                alert("Не можна видалити останню програму!");
+                return;
+            }
+            if (confirm("Видалити цю програму разом з усіма днями вправ?")) {
+                appState.programs = appState.programs.filter(p => p.id !== id);
+                if (appState.activeProgramId === id) {
+                    appState.activeProgramId = appState.programs[0].id;
+                    appState.activeDayIndex = 0;
+                }
+                saveState();
+                renderApp();
+            }
+        }
+
+        function selectProgram(id) {
+            appState.activeProgramId = id;
+            appState.activeDayIndex = 0;
+            renderApp();
+        }
+
+        // Керування днями
+        function addNewDay() {
+            const prog = appState.programs.find(p => p.id === appState.activeProgramId);
+            if (prog) {
+                const newDayNum = prog.days.length + 1;
+                prog.days.push({ name: `День ${newDayNum}`, exercises: [] });
+                appState.activeDayIndex = prog.days.length - 1;
+                saveState();
+                renderApp();
+            }
+        }
+
+        function selectDay(index) {
+            appState.activeDayIndex = index;
+            renderApp();
+        }
+
+        // Керування вправами та сетами
+        function getCurrentDayObj() {
+            const prog = appState.programs.find(p => p.id === appState.activeProgramId);
+            if (prog && prog.days[appState.activeDayIndex]) {
+                return prog.days[appState.activeDayIndex];
+            }
+            return null;
         }
 
         function addExercise() {
+            const day = getCurrentDayObj();
+            if (!day) return;
+
             const select = document.getElementById('exerciseSelect');
-            const exerciseKey = select.value;
-            
-            const newExercise = {
+            const key = select.value;
+
+            day.exercises.push({
                 id: 'ex_' + Date.now(),
-                key: exerciseKey,
+                key: key,
                 showVisual: false,
                 sets: [{ weight: 16, reps: 10, done: false }]
-            };
+            });
 
-            globalState[currentDay].push(newExercise);
-            saveToLocalStorage();
-            renderState();
+            saveState();
+            renderApp();
         }
 
         function removeExercise(id) {
-            globalState[currentDay] = globalState[currentDay].filter(ex => ex.id !== id);
-            saveToLocalStorage();
-            renderState();
+            const day = getCurrentDayObj();
+            if (!day) return;
+            day.exercises = day.exercises.filter(ex => ex.id !== id);
+            saveState();
+            renderApp();
         }
 
-        function addSet(exerciseId) {
-            const exercise = globalState[currentDay].find(ex => ex.id === exerciseId);
-            if (exercise) {
-                const lastSet = exercise.sets[exercise.sets.length - 1];
-                exercise.sets.push({
-                    weight: lastSet ? lastSet.weight : 16,
-                    reps: lastSet ? lastSet.reps : 10,
+        function addSet(exId) {
+            const day = getCurrentDayObj();
+            if (!day) return;
+            const ex = day.exercises.find(e => e.id === exId);
+            if (ex) {
+                const last = ex.sets[ex.sets.length - 1];
+                ex.sets.push({
+                    weight: last ? last.weight : 16,
+                    reps: last ? last.reps : 10,
                     done: false
                 });
-                saveToLocalStorage();
-                renderState();
+                saveState();
+                renderApp();
             }
         }
 
-        function updateSetData(exerciseId, setIndex, field, value) {
-            const exercise = globalState[currentDay].find(ex => ex.id === exerciseId);
-            if (exercise && exercise.sets[setIndex]) {
-                exercise.sets[setIndex][field] = parseFloat(value) || value;
-                saveToLocalStorage();
+        function updateSet(exId, setIndex, field, val) {
+            const day = getCurrentDayObj();
+            if (!day) return;
+            const ex = day.exercises.find(e => e.id === exId);
+            if (ex && ex.sets[setIndex]) {
+                ex.sets[setIndex][field] = parseFloat(val) || val;
+                saveState();
             }
         }
 
-        function toggleVisual(exerciseId) {
-            const exercise = globalState[currentDay].find(ex => ex.id === exerciseId);
-            if (exercise) {
-                exercise.showVisual = !exercise.showVisual;
-                saveToLocalStorage();
-                renderState();
+        function toggleVisual(exId) {
+            const day = getCurrentDayObj();
+            if (!day) return;
+            const ex = day.exercises.find(e => e.id === exId);
+            if (ex) {
+                ex.showVisual = !ex.showVisual;
+                saveState();
+                renderApp();
             }
         }
 
-        function toggleSetDone(exerciseId, setIndex) {
-            const exercise = globalState[currentDay].find(ex => ex.id === exerciseId);
-            if (exercise && exercise.sets[setIndex]) {
-                exercise.sets[setIndex].done = !exercise.sets[setIndex].done;
-                saveToLocalStorage();
-                renderState();
+        function toggleDone(exId, setIndex) {
+            const day = getCurrentDayObj();
+            if (!day) return;
+            const ex = day.exercises.find(e => e.id === exId);
+            if (ex && ex.sets[setIndex]) {
+                ex.sets[setIndex].done = !ex.sets[setIndex].done;
+                saveState();
+                renderApp();
 
-                if (exercise.sets[setIndex].done) {
-                    startTimer(90); 
+                if (ex.sets[setIndex].done) {
+                    startTimer(90);
                 }
             }
         }
 
         function clearCurrentDay() {
-            if (confirm(`Очистити поточні записи для цього тренування?`)) {
-                globalState[currentDay] = [];
-                saveToLocalStorage();
-                renderState();
+            const day = getCurrentDayObj();
+            if (day && confirm("Очистити всі вправи для цього дня?")) {
+                day.exercises = [];
+                saveState();
+                renderApp();
                 stopTimer();
             }
         }
 
-        function renderState() {
-            const container = document.getElementById('workoutContainer');
-            container.innerHTML = '';
+        // Відрендерити все на екран
+        function renderApp() {
+            // 1. Рендеринг карток програм
+            const progContainer = document.getElementById('programsContainer');
+            progContainer.innerHTML = '';
+            
+            appState.programs.forEach(p => {
+                const isActive = p.id === appState.activeProgramId;
+                progContainer.innerHTML += `
+                    <div class="program-card ${isActive ? 'active' : ''}" onclick="selectProgram('${p.id}')">
+                        <button class="btn-delete-program" onclick="deleteProgram('${p.id}', event)">🗑️</button>
+                        <h3>${p.title}</h3>
+                        <p>${p.desc}</p>
+                        <p style="margin-top:8px; color: var(--accent-color); font-weight:600;">${p.days.length} трен. дні</p>
+                    </div>
+                `;
+            });
 
-            const currentExercises = globalState[currentDay] || [];
+            // 2. Рендеринг вкладок днів
+            const currentProg = appState.programs.find(p => p.id === appState.activeProgramId);
+            const daysTabsContainer = document.getElementById('daysTabsContainer');
+            daysTabsContainer.innerHTML = '';
 
-            if (currentExercises.length === 0) {
-                container.innerHTML = `<div style="text-align:center; color:var(--text-muted); padding: 25px 15px; border: 1px dashed #444; border-radius: 8px; font-size:14px; background-color: var(--card-bg);">Список порожній.<br>Обери вправу зі свого плану вгорі та натисни "+ Додати".</div>`;
+            if (currentProg) {
+                currentProg.days.forEach((day, index) => {
+                    const isActive = index === appState.activeDayIndex;
+                    daysTabsContainer.innerHTML += `
+                        <button class="day-tab ${isActive ? 'active' : ''}" onclick="selectDay(${index})">
+                            ${day.name}
+                        </button>
+                    `;
+                });
+                daysTabsContainer.innerHTML += `<button class="btn-add-day" onclick="addNewDay()">+ Новий день</button>`;
+            }
+
+            // 3. Рендеринг вправ дня
+            const workoutContainer = document.getElementById('workoutContainer');
+            workoutContainer.innerHTML = '';
+
+            const activeDay = getCurrentDayObj();
+            if (!activeDay || activeDay.exercises.length === 0) {
+                workoutContainer.innerHTML = `<div style="text-align:center; color:#8d99ae; padding: 30px 15px; border: 1px dashed #2d3748; border-radius: 16px; font-size:14px; background-color: #151a21;">У цьому дні ще немає вправ.<br>Обери рух зі списку нижче і натисни "+ Вправу".</div>`;
                 return;
             }
 
-            currentExercises.forEach(ex => {
-                const dbData = exerciseDB[ex.key];
-                if (!dbData) return;
-                
+            activeDay.exercises.forEach(ex => {
+                const db = exerciseDB[ex.key];
+                if (!db) return;
+
                 let setsHTML = '';
-                ex.sets.forEach((set, index) => {
+                ex.sets.forEach((set, sIdx) => {
                     setsHTML += `
                         <tr class="set-row">
-                            <td>${index + 1}</td>
-                            <td><input type="number" class="input-field" value="${set.weight}" onchange="updateSetData('${ex.id}', ${index}, 'weight', this.value)"></td>
-                            <td><input type="number" class="input-field" value="${set.reps}" onchange="updateSetData('${ex.id}', ${index}, 'reps', this.value)"></td>
+                            <td>${sIdx + 1}</td>
+                            <td><input type="number" class="input-field" value="${set.weight}" onchange="updateSet('${ex.id}', ${sIdx}, 'weight', this.value)"></td>
+                            <td><input type="number" class="input-field" value="${set.reps}" onchange="updateSet('${ex.id}', ${sIdx}, 'reps', this.value)"></td>
                             <td style="text-align: right;">
-                                <button class="btn-check ${set.done ? 'done' : ''}" onclick="toggleSetDone('${ex.id}', ${index})">
+                                <button class="btn-check ${set.done ? 'done' : ''}" onclick="toggleDone('${ex.id}', ${sIdx})">
                                     ${set.done ? '✓' : 'Done'}
                                 </button>
                             </td>
@@ -692,21 +775,21 @@
                     `;
                 });
 
-                const cardHTML = `
+                workoutContainer.innerHTML += `
                     <div class="exercise-card">
                         <div class="exercise-header">
-                            <span class="exercise-title">${dbData.title}</span>
+                            <span class="exercise-title">${db.title}</span>
                             <div>
                                 <button class="btn-delete" onclick="removeExercise('${ex.id}')">🗑️</button>
                                 <button class="btn-info" onclick="toggleVisual('${ex.id}')">?</button>
                             </div>
                         </div>
-                        <div class="exercise-tip">${dbData.tip}</div>
+                        <div class="exercise-tip">${db.tip}</div>
 
                         <div class="exercise-guide" style="display: ${ex.showVisual ? 'block' : 'none'}">
-                            <div class="guide-item"><span class="guide-title">🛠️ Інвентар:</span> ${dbData.eq}</div>
-                            <div class="guide-item"><span class="guide-title">🧘‍♂️ Вихідне положення:</span> ${dbData.pos}</div>
-                            <div class="guide-item"><span class="guide-title">🎯 Техніка виконання:</span> ${dbData.tech}</div>
+                            <div class="guide-item"><span class="guide-title">🛠️ Інвентар:</span> ${db.eq}</div>
+                            <div class="guide-item"><span class="guide-title">🧘‍♂️ Вихідне положення:</span> ${db.pos}</div>
+                            <div class="guide-item"><span class="guide-title">🎯 Техніка виконання:</span> ${db.tech}</div>
                         </div>
 
                         <table class="sets-table">
@@ -725,10 +808,10 @@
                         <button class="btn-add-set" onclick="addSet('${ex.id}')">+ Додати підхід</button>
                     </div>
                 `;
-                container.insertAdjacentHTML('beforeend', cardHTML);
             });
         }
 
+        // Функції таймера відпочинку
         function startTimer(seconds) {
             clearInterval(timerInterval);
             const display = document.getElementById('timerDisplay');
