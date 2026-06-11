@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="apple-mobile-web-app-title" content="PowerLog">
+    <meta name="application-name" content="PowerLog">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/nolan/512/dumbbell.png">
+
     <title>PowerLog Pro — Твій Щоденник Тренувань</title>
     <style>
         :root {
@@ -66,7 +73,7 @@
             font-weight: 700;
         }
 
-        /* Горизонтальний список програм з AppStore */
+        /* Горизонтальний список програм */
         .programs-scroll {
             display: flex;
             gap: 12px;
@@ -446,7 +453,7 @@
             <div class="programs-scroll" id="programsContainer"></div>
         </div>
 
-        <button class="btn-create-program" onclick="createNewProgram()">+ Створити власну програму</button>
+        <button class="btn-create-program" onclick="createNewProgram()">+ Створити власну программу</button>
 
         <div>
             <div class="section-title" id="daysTitle">Дні Тренування</div>
@@ -540,7 +547,7 @@
             db_triceps_extension: { title: "Підйом гантелі на трицепс з-за голови", tip: "План: 4 підходи по 10-12 повторень", eq: "Одна гантель, яку тримають обома руками під верхній внутрішній диск.", pos: "Сидячи на лаві або стоячи рівно. Руки з гантеллю випрямлені над головою.", tech: "Утримуючи лікті близько до голови, плавно опускай гантель за голову до повного згинання рук. Зусиллям трицепсів випрямляй руки вгору." }
         };
 
-        // ТЕПЕР ВСЕ СУВОРО УНІФІКОВАНО В "ДЕНЬ 1", "ДЕНЬ 2"
+        // Уніфікована логіка днів за замовчуванням
         let appState = {
             activeProgramId: "prog_1",
             activeDayIndex: 0,
@@ -569,7 +576,7 @@
         let timerInterval = null;
 
         window.onload = function() {
-            // Видалення попередніх версій, щоб застосувати уніфіковану назву днів
+            // Очищення старої назви сховища, щоб уникнути конфліктів застарілих версій
             localStorage.removeItem('powerLog_v10_appstore_style');
 
             const saved = localStorage.getItem(STORAGE_KEY);
@@ -734,7 +741,7 @@
             }
         }
 
-        // ФУНКЦІЇ СИНХРОНІЗАЦІЇ
+        // Функції копіювання / вставки даних для пристроїв
         function exportData() {
             const dataStr = btoa(unescape(encodeURIComponent(JSON.stringify(appState))));
             navigator.clipboard.writeText(dataStr).then(() => {
