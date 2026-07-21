@@ -42,6 +42,17 @@
         .progress-bar-fill {
             transition: width 0.3s ease-in-out;
         }
+
+        optgroup {
+            background-color: #161b22;
+            color: #22d3ee;
+            font-weight: bold;
+        }
+        option {
+            background-color: #0d1117;
+            color: #ffffff;
+            font-weight: normal;
+        }
     </style>
 </head>
 <body class="max-w-md mx-auto px-4">
@@ -80,15 +91,15 @@
         <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1" id="days-tabs"></div>
     </section>
 
-    <!-- ДИСПЕТЧЕР ВПРАВ В ДНІ -->
-    <section class="bg-gray-900/60 border border-gray-800 p-3 rounded-2xl mb-4 space-y-2">
-        <div class="flex gap-2">
-            <select id="exercise-select" class="flex-1 bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400"></select>
-            <button onclick="addExerciseToDay()" class="bg-cyan-400 hover:bg-cyan-300 text-black font-bold px-3 py-2 rounded-xl text-xs transition whitespace-nowrap">
+    <!-- ДИСПЕТЧЕР ВПРАВ В ДНІ (ВИПРАВЛЕНА ВЕРСТКА) -->
+    <section class="bg-gray-900/60 border border-gray-800 p-3 rounded-2xl mb-4 space-y-2.5">
+        <div class="flex items-stretch gap-2 w-full">
+            <select id="exercise-select" class="flex-1 min-w-0 bg-gray-950 border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400"></select>
+            <button onclick="addExerciseToDay()" class="shrink-0 bg-cyan-400 hover:bg-cyan-300 text-black font-bold px-4 py-2.5 rounded-xl text-xs transition flex items-center justify-center whitespace-nowrap">
                 + Вправу
             </button>
         </div>
-        <button onclick="openNewExerciseModal()" class="w-full bg-gray-950 hover:bg-gray-800 border border-gray-800 text-cyan-400 font-semibold py-2 rounded-xl text-xs transition">
+        <button onclick="openNewExerciseModal()" class="w-full bg-gray-950 hover:bg-gray-800 border border-gray-800 text-cyan-400 font-semibold py-2.5 rounded-xl text-xs transition text-center block">
             + Створити нову вправу в базу
         </button>
     </section>
@@ -115,12 +126,12 @@
     <div id="exercise-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
         <div class="bg-gray-900 border border-gray-800 w-full max-w-sm rounded-2xl p-4 space-y-3">
             <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-                <h3 class="text-xs font-bold text-white uppercase tracking-wider">Нова вправа в базу</h3>
+                <h3 class="text-xs font-bold text-white uppercase tracking-wider">Створити вправу в базу</h3>
                 <button onclick="closeNewExerciseModal()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <input type="text" id="new-ex-name" placeholder="Назва вправи" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-cyan-400">
-            <textarea id="new-ex-desc" placeholder="Опис техніки / підказка (необов'язково)" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-cyan-400 h-20"></textarea>
-            <button onclick="createNewExercise()" class="w-full bg-cyan-400 text-black font-bold py-2 rounded-xl text-xs uppercase tracking-wider">Зберегти</button>
+            <input type="text" id="new-ex-name" placeholder="Назва вправи (наприклад: Гоккен-присідання)" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-cyan-400">
+            <textarea id="new-ex-desc" placeholder="Опис техніки / підказка (необов'язково)" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-2.5 px-3 text-xs text-white focus:outline-none focus:border-cyan-400 h-24"></textarea>
+            <button onclick="createNewExercise()" class="w-full bg-cyan-400 text-black font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider">Зберегти у базу</button>
         </div>
     </div>
 
@@ -136,40 +147,44 @@
     </div>
 
     <script>
+        // === СИСТЕМАТИЗОВАНА БАЗА ВПРАВ ЗА КАТЕГОРІЯМИ ===
         const initialExerciseBase = [
-            // === СПИСОК №1: ТВОЇ ТРЕНУВАННЯ (З ПЕРЕКЛАДОМ ТА ПОЯСНЕННЯМИ) ===
-            // --- Тренування 1 ---
-            { id: 'ex_t1_1', name: 'Випади на одній нозі', desc: 'План: 3 х 10-12.\nТехніка: Крок уперед, опускай таз вертикально до кута 90° у колінах. Коліно попереду не виходить за носок.' },
-            { id: 'ex_t1_2', name: 'Присідання з гантелями', desc: 'План: 3 х 8-10.\nТехніка: Тримай гантелі в опущених руках або біля плечей. Спина рівна, п\'яти не відривай від підлоги.' },
-            { id: 'ex_t1_3', name: 'Шраги з гантелями', desc: 'План: 3 х 8-10.\nТехніка: Руки прямі вздовж тулуба. Піднімай плечі максимально вгору до вух без згинання ліктів.' },
-            { id: 'ex_t1_4', name: 'Жим гантелей сидячи', desc: 'План: 3 х 10-12.\nТехніка: Сидячи рівно, витискай гантелі вгору над головою до майже повного розпрямлення ліктів.' },
-            { id: 'ex_t1_5', name: 'Жим гантелей лежачи', desc: 'План: 4 х 10-12.\nТехніка: Лежачи на лаві/підлозі, зводи лопатки і тисни гантелі вгору над грудьми.' },
-            { id: 'ex_t1_6', name: 'Віджимання від підлоги', desc: 'План: 4 х 30-25-25-20.\nТехніка: Тіло — пряма лінія. Опускайся до торкання грудьми підлоги, лікті під кутом 45° до тулуба.' },
-            { id: 'ex_t1_7', name: 'Віджимання від лави (трицепс)', desc: 'План: 4 х 30-25-25-20.\nТехніка: Руки спираються на лаву/стілець ззаду. Опускай таз вертикально до кута 90° у ліктях.' },
-            { id: 'ex_t1_8', name: 'Тяга штанги/гантелей до пояса', desc: 'План: 4 х 12-15.\nТехніка: Нахил тулуба 45°, спина прогнута. Тягни вагу уздовж стегон до низу живота за рахунок спини.' },
-            { id: 'ex_t1_9', name: 'Підйом штанги на біцепс (повний)', desc: 'План: 4 х 10.\nТехніка: Лікті притиснуті до тулуба. Піднімай гриф від стегон до верхньої точки грудей без розгойдування.' },
-            { id: 'ex_t1_10', name: 'Підйом штанги на біцепс (наполовець)', desc: 'План: 4 х 10.\nТехніка: Робота у частковій амплітуді (від стегон до паралелі з підлогою або від паралелі до грудей).' },
-            { id: 'ex_t1_11', name: 'Підйом гантелей на біцепс (наполовець)', desc: 'План: 4 х 10.\nТехніка: Акцентоване опрацювання біцепса у частковій амплітуді без розслаблення у крайніх точках.' },
-            { id: 'ex_t1_12', name: 'Концентроване згинання на біцепс (у коліно)', desc: 'План: 4 х 10-12.\nТехніка: Сидячи, лікоть спирається у внутрішню частину стегна. Піднімай гантель чітко зусиллям біцепса.' },
-            { id: 'ex_t1_13', name: 'Скручування на прес', desc: 'План: 4 х макс.\nТехніка: Лежачи на спині, відривай лише лопатки від підлоги, максимально скорочуючи м\'язи преса.' },
+            // --- НОГИ ТА СІДНИЦІ ---
+            { id: 'ex_t1_1', category: 'Ноги та сідниці', name: 'Випади на одній нозі', desc: 'План: 3 х 10-12.\nТехніка: Крок уперед, опускай таз вертикально до кута 90° у колінах. Коліно попереду не виходить за носок.' },
+            { id: 'ex_t1_2', category: 'Ноги та сідниці', name: 'Присідання з гантелями', desc: 'План: 3 х 8-10.\nТехніка: Тримай гантелі в опущених руках або біля плечей. Спина рівна, п\'яти не відривай від підлоги.' },
+            { id: 'ex_t2_1', category: 'Ноги та сідниці', name: 'Присідання сумо з гантеллю', desc: 'План: 4 х 10.\nТехніка: Широка постановка ніг, носки в сторони. Тримай гантель між ніг і присідай глибоко.' },
+            { id: 'ex_t2_5', category: 'Ноги та сідниці', name: 'Румунська тяга (на прямих ногах)', desc: 'План: 4 х 10-12.\nТехніка: Ноги майже прямі, таз відводь назад, нахиляйся із прямою спиною до відчуття розтягування біцепса стегна.' },
 
-            // --- Тренування 2 ---
-            { id: 'ex_t2_1', name: 'Присідання сумо з гантеллю', desc: 'План: 4 х 10.\nТехніка: Широка постановка ніг, носки в сторони. Тримай гантель між ніг і присідай глибоко.' },
-            { id: 'ex_t2_2', name: 'Підйом гантелей перед собою', desc: 'План: 4 х 12-15.\nТехніка: Піднімай прямі (або трохи зігнуті) руки з гантелями до рівня очей перед собою.' },
-            { id: 'ex_t2_3', name: 'Махи гантелями в сторони', desc: 'План: 4 х 12-15.\nТехніка: Підйом гантелей через сторони до рівня плечей. Лікті трохи вище за кисті.' },
-            { id: 'ex_t2_4', name: 'Тяга штанги/гантелей до підборіддя ("Вертоліт")', desc: 'План: 4 х 10.\nТехніка: Вузький або середній хват. Тягни вагу вгору уздовж тулуба, піднімаючи лікті вище плечей.' },
-            { id: 'ex_t2_5', name: 'Румунська тяга (на прямих ногах)', desc: 'План: 4 х 10-12.\nТехніка: Ноги майже прямі, таз відводь назад, нахиляйся із прямою спиною до відчуття розтягування біцепса стегна.' },
-            { id: 'ex_t2_6', name: 'Розведення гантелей лежачи', desc: 'План: 4 х 10-12.\nТехніка: Лежачи на лаві, розводь трохи зігнуті руки в сторони до рівня грудей та зводь назад.' },
-            { id: 'ex_t2_7', name: 'Тяга гантелі однією рукою в нахилі', desc: 'План: 4 х 12-15.\nТехніка: Упор коліном і рукою на лаву. Тягни гантель до пояса, зводячи лопатку.' },
-            { id: 'ex_t2_8', name: 'Підйом гантелей "Молоток"', desc: 'План: 4 х 10-12.\nТехніка: Хват нейтральний (долоні дивляться одна на одну). Згинання рук без розвертання кистей.' },
-            { id: 'ex_t2_9', name: 'Розгинання руки з гантеллю на трицепс (із-за голови)', desc: 'План: 4 х 10-12.\nТехніка: Лікоть дивиться вгору і зафіксований. Розгинай руку з гантеллю вгору над головою.' },
+            // --- СПИНА ---
+            { id: 'ex_t1_8', category: 'Спина', name: 'Тяга штанги/гантелей до пояса', desc: 'План: 4 х 12-15.\nТехніка: Нахил тулуба 45°, спина прогнута. Тягни вагу уздовж стегон до низу живота за рахунок м\'язів спини.' },
+            { id: 'ex_t2_7', category: 'Спина', name: 'Тяга гантелі однією рукою в нахилі', desc: 'План: 4 х 12-15.\nТехніка: Упор коліном і рукою на лаву. Тягни гантель до пояса, зводячи лопатку.' },
+            { id: 'ex_t1_3', category: 'Спина', name: 'Шраги з гантелями (трапеції)', desc: 'План: 3 х 8-10.\nТехніка: Руки прямі вздовж тулуба. Піднімай плечі максимально вгору до вух без згинання ліктів.' },
 
-            // === СПИСОК №2: АЛЬТЕРНАТИВНА БАЗА ===
-            { id: 'ex_alt_1', name: 'Жим гантелей на похилій лаві', desc: 'Опрацювання верхньої частини грудей. Кут лави 30-45 градусів.' },
-            { id: 'ex_alt_2', name: 'Французький жим з гантелями', desc: 'Ізольована вправа на трицепс лежачи. Згинання ліктів до скронь.' },
-            { id: 'ex_alt_3', name: 'Махи гантелями в нахилі (задня дельта)', desc: 'Нахил тулуба 60°, розведення рук у сторони для опрацювання задньої частини плечей.' },
-            { id: 'ex_alt_4', name: 'Підйом ніг у висі', desc: 'Ефективна вправа на нижню частину преса. Підйом колін або прямих ніг до паралелі.' },
-            { id: 'ex_alt_5', name: 'Планка', desc: 'Статична вправа на корі. Тримай тіло ідеально рівним від голови до п\'ят.' }
+            // --- ПЛЕЧІ ТА ГРУДИ ---
+            { id: 'ex_t1_4', category: 'Плечі та Груди', name: 'Жим гантелей сидячи (плечі)', desc: 'План: 3 х 10-12.\nТехніка: Сидячи рівно, витискай гантелі вгору над головою до майже повного розпрямлення ліктів.' },
+            { id: 'ex_t1_5', category: 'Плечі та Груди', name: 'Жим гантелей лежачи (груди)', desc: 'План: 4 х 10-12.\nТехніка: Лежачи на лаві або підлозі, зводи лопатки і тисни гантелі вгору над грудьми.' },
+            { id: 'ex_t1_6', category: 'Плечі та Груди', name: 'Віджимання від підлоги', desc: 'План: 4 х 30-25-25-20.\nТехніка: Тіло — пряма лінія. Опускайся до торкання грудьми підлоги, лікті під кутом 45° до тулуба.' },
+            { id: 'ex_t2_2', category: 'Плечі та Груди', name: 'Підйом гантелей перед собою', desc: 'План: 4 х 12-15.\nТехніка: Піднімай прямі (або трохи зігнуті) руки з гантелями до рівня очей перед собою.' },
+            { id: 'ex_t2_3', category: 'Плечі та Груди', name: 'Махи гантелями в сторони (середня дельта)', desc: 'План: 4 х 12-15.\nТехніка: Підйом гантелей через сторони до рівня плечей. Лікті трохи вище за кисті.' },
+            { id: 'ex_t2_4', category: 'Плечі та Груди', name: 'Тяга штанги/гантелей до підборіддя ("Вертоліт")', desc: 'План: 4 х 10.\nТехніка: Вузький або середній хват. Тягни вагу вгору уздовж тулуба, піднімаючи лікті вище плечей.' },
+            { id: 'ex_t2_6', category: 'Плечі та Груди', name: 'Розведення гантелей лежачи', desc: 'План: 4 х 10-12.\nТехніка: Лежачи на лаві, розводь трохи зігнуті руки в сторони до рівня грудей та зводь назад.' },
+            { id: 'ex_alt_1', category: 'Плечі та Груди', name: 'Жим гантелей на похилій лаві', desc: 'Опрацювання верхньої частини грудей. Кут лави 30-45 градусів.' },
+            { id: 'ex_alt_3', category: 'Плечі та Груди', name: 'Махи гантелями в нахилі (задня дельта)', desc: 'Нахил тулуба 60°, розведення рук у сторони для опрацювання задньої частини плечей.' },
+
+            // --- РУКИ (БІЦЕПС / ТРИЦЕПС) ---
+            { id: 'ex_t1_7', category: 'Руки (Біцепс / Трицепс)', name: 'Віджимання від лави на трицепс', desc: 'План: 4 х 30-25-25-20.\nТехніка: Руки спираються на лаву ззаду. Опускай таз вертикально до кута 90° у ліктях.' },
+            { id: 'ex_t1_9', category: 'Руки (Біцепс / Трицепс)', name: 'Підйом штанги на біцепс (повний)', desc: 'План: 4 х 10.\nТехніка: Лікті притиснуті до тулуба. Піднімай гриф від стегон до верхньої точки грудей без розгойдування.' },
+            { id: 'ex_t1_10', category: 'Руки (Біцепс / Трицепс)', name: 'Підйом штанги на біцепс (наполовину)', desc: 'План: 4 х 10.\nТехніка: Робота у частковій амплітуді (від стегон до паралелі з підлогою або від паралелі до грудей).' },
+            { id: 'ex_t1_11', category: 'Руки (Біцепс / Трицепс)', name: 'Підйом гантелей на біцепс (наполовину)', desc: 'План: 4 х 10.\nТехніка: Акцентоване опрацювання біцепса у частковій амплітуді без розслаблення у крайніх точках.' },
+            { id: 'ex_t1_12', category: 'Руки (Біцепс / Трицепс)', name: 'Згинання на біцепс з упором у коліно', desc: 'План: 4 х 10-12.\nТехніка: Сидячи, лікоть спирається у внутрішню частину стегна. Піднімай гантель чітко зусиллям біцепса.' },
+            { id: 'ex_t2_8', category: 'Руки (Біцепс / Трицепс)', name: 'Підйом гантелей "Молоток"', desc: 'План: 4 х 10-12.\nТехніка: Хват нейтральний (долоні дивляться одна на одну). Згинання рук без розвертання кистей.' },
+            { id: 'ex_t2_9', category: 'Руки (Біцепс / Трицепс)', name: 'Розгинання руки з гантеллю на трицепс (із-за голови)', desc: 'План: 4 х 10-12.\nТехніка: Лікоть дивиться вгору і зафіксований. Розгинай руку з гантеллю вгору над головою.' },
+            { id: 'ex_alt_2', category: 'Руки (Біцепс / Трицепс)', name: 'Французький жим з гантелями', desc: 'Ізольована вправа на трицепс лежачи. Згинання ліктів до скронь.' },
+
+            // --- КОР ТА ПРЕС ---
+            { id: 'ex_t1_13', category: 'Кор та Прес', name: 'Скручування на прес', desc: 'План: 4 х макс.\nТехніка: Лежачи на спині, відривай лише лопатки від підлоги, максимально скорочуючи м\'язи преса.' },
+            { id: 'ex_alt_4', category: 'Кор та Прес', name: 'Підйом ніг у висі', desc: 'Ефективна вправа на нижню частину преса. Підйом колін або прямих ніг до паралелі.' },
+            { id: 'ex_alt_5', category: 'Кор та Прес', name: 'Планка', desc: 'Статична вправа на корі. Тримай тіло ідеально рівним від голови до п\'ят.' }
         ];
 
         let appState = JSON.parse(localStorage.getItem('powerlog_state')) || {
@@ -184,7 +199,10 @@
         let timerInterval = null;
 
         window.onload = function() {
-            if (!appState.exerciseBase) appState.exerciseBase = initialExerciseBase;
+            // Оновлюємо базу, щоб завжди підтягувалися нові категорії
+            if (!appState.exerciseBase || appState.exerciseBase.length === 0) {
+                appState.exerciseBase = initialExerciseBase;
+            }
             renderDaysTabs();
             renderExerciseSelect();
             renderWorkoutList();
@@ -238,16 +256,32 @@
             renderDaysTabs();
         }
 
-        // --- БАЗА ВПРАВ ---
+        // --- БАЗА ВПРАВ З КАТЕГОРІЯМИ ---
         function renderExerciseSelect() {
             const select = document.getElementById('exercise-select');
             select.innerHTML = '';
+
+            // Групуємо вправи за категоріями
+            const categories = {};
             appState.exerciseBase.forEach(ex => {
-                const opt = document.createElement('option');
-                opt.value = ex.id;
-                opt.innerText = ex.name;
-                select.appendChild(opt);
+                const cat = ex.category || 'Власні вправи';
+                if (!categories[cat]) categories[cat] = [];
+                categories[cat].push(ex);
             });
+
+            for (const catName in categories) {
+                const group = document.createElement('optgroup');
+                group.label = catName;
+
+                categories[catName].forEach(ex => {
+                    const opt = document.createElement('option');
+                    opt.value = ex.id;
+                    opt.innerText = ex.name;
+                    group.appendChild(opt);
+                });
+
+                select.appendChild(group);
+            }
         }
 
         function addExerciseToDay() {
@@ -272,7 +306,6 @@
             saveState();
         }
 
-        // --- ЗМІНА ПОРЯДКУ ТА ВИДАЛЕННЯ ВПРАВ ---
         function moveExercise(instanceId, direction) {
             const activeDay = appState.days.find(d => d.id === appState.activeDayId);
             if (!activeDay) return;
@@ -298,7 +331,6 @@
             saveState();
         }
 
-        // --- КЕРУВАННЯ ПІДХОДАМИ (ПЛЮС / МІНУС) ---
         function addSetToExercise(instanceId) {
             const activeDay = appState.days.find(d => d.id === appState.activeDayId);
             const item = activeDay?.exercises.find(e => e.instanceId === instanceId);
@@ -318,7 +350,7 @@
             saveState();
         }
 
-        // --- СПИСОК ВПРАВ ТРЕНУВАННЯ (РЕНДЕР) ---
+        // --- СПИСОК ВПРАВ ТРЕНУВАННЯ ---
         function renderWorkoutList() {
             const container = document.getElementById('workout-exercises-list');
             container.innerHTML = '';
@@ -474,8 +506,13 @@
                 return;
             }
 
-            const newId = 'ex_' + Date.now();
-            appState.exerciseBase.push({ id: newId, name: name, desc: desc });
+            const newId = 'ex_custom_' + Date.now();
+            appState.exerciseBase.unshift({ 
+                id: newId, 
+                category: '✨ Власні вправи', 
+                name: name, 
+                desc: desc || 'Власна вправа' 
+            });
             
             closeNewExerciseModal();
             renderExerciseSelect();
@@ -556,7 +593,7 @@
         }
 
         function resetData() {
-            if (confirm('Ви впевнені, що хочете очистити кєш та скинути дані PowerLog Pro?')) {
+            if (confirm('Ви впевнені, що хочете скинути дані та відновити оновлену базу вправ?')) {
                 localStorage.removeItem('powerlog_state');
                 location.reload();
             }
