@@ -91,17 +91,20 @@
         <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1" id="days-tabs"></div>
     </section>
 
-    <!-- ДИСПЕТЧЕР ВПРАВ В ДНІ (ВИПРАВЛЕНА ВЕРСТКА) -->
+    <!-- ДИСПЕТЧЕР ВПРАВ В ДНІ (100% АДАПТИВНИЙ) -->
     <section class="bg-gray-900/60 border border-gray-800 p-3 rounded-2xl mb-4 space-y-2.5">
-        <div class="flex items-stretch gap-2 w-full">
-            <select id="exercise-select" class="flex-1 min-w-0 bg-gray-950 border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400"></select>
-            <button onclick="addExerciseToDay()" class="shrink-0 bg-cyan-400 hover:bg-cyan-300 text-black font-bold px-4 py-2.5 rounded-xl text-xs transition flex items-center justify-center whitespace-nowrap">
-                + Вправу
+        <div class="w-full">
+            <select id="exercise-select" class="w-full bg-gray-950 border border-gray-800 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-400 truncate"></select>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-2">
+            <button onclick="addExerciseToDay()" class="bg-cyan-400 hover:bg-cyan-300 active:scale-95 text-black font-bold py-2.5 px-2 rounded-xl text-xs transition text-center shadow-lg shadow-cyan-400/10">
+                + Додати в день
+            </button>
+            <button onclick="openNewExerciseModal()" class="bg-gray-950 hover:bg-gray-800 active:scale-95 border border-gray-800 text-cyan-400 font-semibold py-2.5 px-2 rounded-xl text-xs transition text-center">
+                + Створити нову
             </button>
         </div>
-        <button onclick="openNewExerciseModal()" class="w-full bg-gray-950 hover:bg-gray-800 border border-gray-800 text-cyan-400 font-semibold py-2.5 rounded-xl text-xs transition text-center block">
-            + Створити нову вправу в базу
-        </button>
     </section>
 
     <!-- СПИСОК ВПРАВ ТРЕНУВАННЯ -->
@@ -199,7 +202,6 @@
         let timerInterval = null;
 
         window.onload = function() {
-            // Оновлюємо базу, щоб завжди підтягувалися нові категорії
             if (!appState.exerciseBase || appState.exerciseBase.length === 0) {
                 appState.exerciseBase = initialExerciseBase;
             }
@@ -261,7 +263,6 @@
             const select = document.getElementById('exercise-select');
             select.innerHTML = '';
 
-            // Групуємо вправи за категоріями
             const categories = {};
             appState.exerciseBase.forEach(ex => {
                 const cat = ex.category || 'Власні вправи';
