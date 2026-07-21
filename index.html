@@ -2,1113 +2,540 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>PowerLog Pro</title>
     
-    <meta name="apple-mobile-web-app-title" content="PowerLog">
-    <meta name="application-name" content="PowerLog">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/nolan/512/dumbbell.png">
-
-    <title>PowerLog Pro — Твій Щоденник Тренувань</title>
+    <meta name="apple-mobile-web-app-title" content="PowerLog Pro">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        :root {
-            --bg-color: #0b0c10;
-            --card-bg: #1f2833;
-            --accent-color: #45f3ff;
-            --accent-muted: #1f6e75;
-            --text-color: #c5c6c7;
-            --text-light: #ffffff;
-            --text-muted: #66fcf1;
-            --success-color: #2ecc71;
-            --danger-color: #e74c3c;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 15px;
-            padding-bottom: 150px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 500px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        header {
-            text-align: left;
-            margin-top: 10px;
-        }
-
-        /* Обгортка для логотипу та назви в один рядок */
-        .brand-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .brand-logo {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-        }
-
-        header h1 {
-            margin: 0;
-            color: var(--text-light);
-            font-size: 26px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        header p {
-            color: #8d99ae;
-            margin: 3px 0 0 0;
-            font-size: 13px;
-        }
-
-        .section-title {
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #8d99ae;
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-
-        /* Горизонтальний список програм */
-        .programs-scroll {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .programs-scroll::-webkit-scrollbar {
-            height: 4px;
-        }
-        .programs-scroll::-webkit-scrollbar-thumb {
-            background: #333;
-            border-radius: 10px;
-        }
-
-        .program-card {
-            flex: 0 0 200px;
-            background: linear-gradient(135deg, #1f2833 0%, #151a21 100%);
-            border: 1px solid #2d3748;
-            border-radius: 16px;
-            padding: 15px;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            scroll-snap-align: start;
-        }
-
-        .program-card.active {
-            border-color: var(--accent-color);
-            box-shadow: 0 4px 20px rgba(69, 243, 255, 0.15);
-        }
-
-        .program-card h3 {
-            margin: 0 0 6px 0;
-            color: var(--text-light);
-            font-size: 16px;
-            font-weight: 700;
-            padding-right: 20px;
-        }
-
-        .program-card p {
-            margin: 0;
-            font-size: 12px;
-            color: #8d99ae;
-        }
-
-        .btn-delete-program {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: none;
-            border: none;
-            color: var(--danger-color);
-            cursor: pointer;
-            font-size: 14px;
-            padding: 0;
-            opacity: 0.6;
-        }
-        .btn-delete-program:hover { opacity: 1; }
-
-        .btn-create-program {
-            background-color: #151a21;
-            border: 1px dashed var(--accent-color);
-            color: var(--accent-color);
-            border-radius: 12px;
-            padding: 12px;
-            width: 100%;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-        }
-
-        /* Дні тренувань */
-        .days-container {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .day-tab {
-            background-color: #151a21;
-            border: 1px solid #2d3748;
-            color: #8d99ae;
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .day-tab.active {
-            background-color: var(--accent-color);
-            color: #000;
-            border-color: var(--accent-color);
-            font-weight: 700;
-        }
-
-        .btn-add-day {
-            background: none;
-            border: 1px dashed #444;
-            color: #8d99ae;
-            padding: 10px 16px;
-            border-radius: 20px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        /* Панель додавання вправ */
-        .add-exercise-panel {
-            background-color: #151a21;
-            border: 1px solid #2d3748;
-            border-radius: 16px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .select-row {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
-        select, .btn-main {
-            font-size: 14px;
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
-            height: 48px;
-            box-sizing: border-box;
-        }
-
-        select {
-            flex-grow: 1;
-            background-color: #1f2833;
-            color: var(--text-light);
-            border: 1px solid #2d3748;
-            width: 100%;
-        }
-
-        .btn-main {
-            background-color: var(--accent-color);
-            color: #000;
-            font-weight: 700;
-            cursor: pointer;
-            min-width: 110px;
-        }
-
-        .btn-secondary {
-            background-color: #1f2833;
-            border: 1px solid #2d3748;
-            color: var(--accent-color);
-            border-radius: 10px;
-            padding: 10px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            text-align: center;
-            width: 100%;
-        }
-
-        /* Форма створення кастомної вправи */
-        .custom-exercise-form {
-            display: none;
-            background-color: #11161d;
-            border: 1px solid #3a4756;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 5px;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .form-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #8d99ae;
-            text-transform: uppercase;
-        }
-
-        .form-input {
-            background-color: #1f2833;
-            border: 1px solid #2d3748;
-            color: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .form-textarea {
-            background-color: #1f2833;
-            border: 1px solid #2d3748;
-            color: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 14px;
-            resize: vertical;
-            min-height: 50px;
-            font-family: inherit;
-        }
-
-        .form-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 5px;
-        }
-
-        .btn-form-save {
-            flex: 1;
-            background-color: var(--success-color);
-            color: #000;
-            font-weight: 700;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-        }
-
-        .btn-form-cancel {
-            flex: 1;
-            background-color: #2d3748;
-            color: #fff;
-            font-weight: 600;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-        }
-
-        #workoutContainer {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .exercise-card {
-            background-color: #151a21;
-            border: 1px solid #2d3748;
-            border-radius: 16px;
-            padding: 18px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-        }
-
-        .exercise-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 4px;
-        }
-
-        .exercise-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-light);
-        }
-
-        .exercise-tip {
-            font-size: 12px;
-            color: #8d99ae;
-            margin-bottom: 12px;
-        }
-
-        .btn-delete {
-            background: none;
-            border: none;
-            color: var(--danger-color);
-            cursor: pointer;
-            font-size: 16px;
-            margin-right: 12px;
-        }
-
-        .btn-info {
-            background: none;
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
-            border-radius: 50%;
-            width: 26px;
-            height: 26px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 13px;
-        }
-
-        .exercise-guide {
-            display: none;
-            background-color: #0b0c10;
-            border-left: 3px solid var(--accent-color);
-            padding: 12px;
-            margin: 14px 0;
-            border-radius: 6px;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .guide-item { margin-bottom: 8px; }
-        .guide-item:last-child { margin-bottom: 0; }
-        .guide-title {
-            color: var(--accent-color);
-            font-weight: 700;
-            font-size: 11px;
-            text-transform: uppercase;
-            display: block;
-            margin-bottom: 2px;
-        }
-
-        .sets-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        .sets-table th {
-            color: #8d99ae;
-            font-size: 12px;
-            text-align: left;
-            padding-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .set-row { border-top: 1px solid #2d3748; }
-        .set-row td { padding: 10px 0; }
-
-        .input-field {
-            background-color: #1f2833;
-            border: 1px solid #2d3748;
-            color: #fff;
-            padding: 8px;
-            border-radius: 8px;
-            width: 55px;
-            text-align: center;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .btn-check {
-            background-color: #1f2833;
-            border: 1px solid #2d3748;
-            color: var(--text-color);
-            padding: 8px 14px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 700;
-            min-width: 65px;
-            transition: all 0.1s;
-        }
-
-        .btn-check.done {
-            background-color: var(--success-color);
-            border-color: var(--success-color);
-            color: #000;
-        }
-
-        .btn-add-set {
-            background: none;
-            border: 1px dashed #444;
-            color: #8d99ae;
-            width: 100%;
-            padding: 10px;
-            margin-top: 12px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .timer-panel {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #151a21;
-            border-top: 1px solid #2d3748;
-            padding: 15px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
-            z-index: 100;
-        }
-
-        .timer-display {
-            font-size: 28px;
-            font-weight: 700;
-            font-family: monospace;
-            color: var(--accent-color);
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            padding-bottom: 120px;
         }
         
-        .timer-display.alarm {
-            color: var(--danger-color);
-            animation: blink 1s infinite;
+        header {
+            padding-top: calc(env(safe-area-inset-top, 20px) + 12px) !important;
         }
 
-        .timer-btn {
-            background-color: #1f2833;
-            border: 1px solid #2d3748;
-            color: var(--text-light);
-            padding: 12px 18px;
-            border-radius: 10px;
-            font-weight: 700;
-            cursor: pointer;
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
 
-        .sync-panel {
-            background-color: #151a21;
-            border: 1px solid #2d3748;
-            border-radius: 16px;
-            padding: 15px;
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
-        .btn-sync {
-            flex: 1;
-            background-color: #1f2833;
-            border: 1px solid #444;
-            color: var(--text-light);
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .btn-clear-all {
-            background: none;
-            color: var(--danger-color);
-            border: 1px solid rgba(231, 76, 61, 0.3);
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        @keyframes blink { 50% { opacity: 0.3; } }
-
-        @media (max-width: 420px) {
-            .select-row { flex-direction: column; gap: 8px; }
-            .btn-main { width: 100%; }
-            .sync-panel { flex-direction: column; }
-            body { padding: 10px; padding-bottom: 150px; }
+        .progress-bar-fill {
+            transition: width 0.3s ease-in-out;
         }
     </style>
 </head>
-<body>
+<body class="max-w-md mx-auto px-4">
 
-    <div class="container">
-        <header>
-            <div class="brand-wrapper">
-                <img src="https://img.icons8.com/nolan/512/dumbbell.png" alt="Logo" class="brand-logo">
-                <h1>PowerLog Pro</h1>
-            </div>
-            <p>Твої кастомні програми тренувань</p>
-        </header>
-
+    <!-- HEADER -->
+    <header class="flex justify-between items-center mb-3 pb-2 border-b border-gray-800">
         <div>
-            <div class="section-title">Мої Програми</div>
-            <div class="programs-scroll" id="programsContainer"></div>
+            <h1 class="text-xl font-black text-cyan-400 tracking-wider flex items-center gap-2">
+                <i class="fa-solid fa-dumbbell"></i> POWERLOG <span class="text-[10px] bg-cyan-400 text-black px-1.5 py-0.5 rounded font-bold">PRO</span>
+            </h1>
         </div>
-
-        <button class="btn-create-program" onclick="createNewProgram()">+ Створити власну програму</button>
-
-        <div>
-            <div class="section-title" id="daysTitle">Дні Тренування</div>
-            <div class="days-container" id="daysTabsContainer"></div>
+        <div class="flex space-x-3 text-sm">
+            <button onclick="exportData()" class="text-gray-400 hover:text-white" title="Експорт"><i class="fa-solid fa-download"></i></button>
+            <button onclick="importData()" class="text-gray-400 hover:text-white" title="Імпорт"><i class="fa-solid fa-upload"></i></button>
+            <button onclick="resetData()" class="text-red-500 hover:text-red-400" title="Скинути"><i class="fa-solid fa-trash-can"></i></button>
         </div>
+    </header>
 
-        <div class="add-exercise-panel">
-            <div class="select-row">
-                <select id="exerciseSelect">
-                    </select>
-                <button class="btn-main" onclick="addExercise()">+ Вправу</button>
+    <!-- ПРОГРЕС ТРЕНУВАННЯ -->
+    <section class="bg-gray-900/80 border border-gray-800 p-3 rounded-2xl mb-4">
+        <div class="flex justify-between items-center text-xs mb-1.5">
+            <span class="text-gray-400 font-medium">Прогрес тренування</span>
+            <span id="workout-progress-text" class="text-cyan-400 font-bold font-mono">0% (0/0)</span>
+        </div>
+        <div class="w-full bg-gray-950 rounded-full h-2 overflow-hidden border border-gray-800/80">
+            <div id="workout-progress-bar" class="bg-cyan-400 h-full rounded-full progress-bar-fill" style="width: 0%"></div>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-gray-500 mt-2 pt-1 border-t border-gray-800/40">
+            <span>Загальний тоннаж: <strong id="total-volume" class="text-gray-300 font-mono">0 кг</strong></span>
+            <span id="active-day-title" class="text-cyan-400 font-semibold">День не обрано</span>
+        </div>
+    </section>
+
+    <!-- ТАБИ ДНІВ -->
+    <section class="mb-4">
+        <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1" id="days-tabs"></div>
+    </section>
+
+    <!-- ДИСЧЕТЧЕР ВПРАВ В ДНІ -->
+    <section class="bg-gray-900/60 border border-gray-800 p-3 rounded-2xl mb-4 space-y-2">
+        <div class="flex gap-2">
+            <select id="exercise-select" class="flex-1 bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400"></select>
+            <button onclick="addExerciseToDay()" class="bg-cyan-400 hover:bg-cyan-300 text-black font-bold px-3 py-2 rounded-xl text-xs transition whitespace-nowrap">
+                + Вправу
+            </button>
+        </div>
+        <button onclick="openNewExerciseModal()" class="w-full bg-gray-950 hover:bg-gray-800 border border-gray-800 text-cyan-400 font-semibold py-2 rounded-xl text-xs transition">
+            + Створити нову вправу в базу
+        </button>
+    </section>
+
+    <!-- СПИСОК ВПРАВ ТРЕНУВАННЯ -->
+    <main id="workout-exercises-list" class="space-y-4 mb-6"></main>
+
+    <!-- ТАЙМЕР ВІДПОЧИНКУ (ФІКСОВАНИЙ) -->
+    <div class="fixed bottom-0 left-0 right-0 max-w-md mx-auto p-3 bg-gray-950/95 backdrop-blur-md border-t border-gray-800 pb-[calc(env(safe-area-inset-bottom,16px)+10px)] z-40">
+        <div class="flex justify-between items-center">
+            <div>
+                <span class="text-[9px] text-gray-500 uppercase tracking-wider block font-bold">Відпочинок</span>
+                <span id="timer-display" class="text-xl font-black font-mono text-cyan-400">00:00</span>
             </div>
-            
-            <button class="btn-secondary" onclick="toggleCustomExerciseForm()">+ Створити нову вправу</button>
-
-            <div class="custom-exercise-form" id="customExerciseForm">
-                <div class="form-group">
-                    <label>Назва вправи *</label>
-                    <input type="text" id="customName" class="form-input" placeholder="Наприклад: Жим на похилій лаві">
-                </div>
-                <div class="form-group">
-                    <label>Група м'язів</label>
-                    <select id="customCategory" style="height: 40px; padding: 5px 10px;">
-                        <option value="Груди та Спина">Груди та Спина</option>
-                        <option value="Ноги та Сідниці">Ноги та Сідниці</option>
-                        <option value="Плечі та Трапеції">Плечі та Трапеції</option>
-                        <option value="Руки (Біцепс/Трицепс)">Руки (Біцепс/Трицепс)</option>
-                        <option value="Коре">Коре</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>🛠️ Інвентар</label>
-                    <input type="text" id="customEq" class="form-input" placeholder="Наприклад: Дві гантелі, регульована лава">
-                </div>
-                <div class="form-group">
-                    <label>🧘‍♂️ Вихідне положення</label>
-                    <textarea id="customPos" class="form-textarea" placeholder="Опиши стійку або положення корпусу..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label>🎯 Техніка виконання</label>
-                    <textarea id="customTech" class="form-textarea" placeholder="Опиши правильний рух і підводні камені..."></textarea>
-                </div>
-                <div class="form-buttons">
-                    <button class="btn-form-save" onclick="saveCustomExercise()">Зберегти вправу</button>
-                    <button class="btn-form-cancel" onclick="toggleCustomExerciseForm()">Скасувати</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="workoutContainer"></div>
-        
-        <button class="btn-clear-all" onclick="clearCurrentDay()">Видалити всі вправи з цього дня</button>
-
-        <div>
-            <div class="section-title">Синхронізація (ПК ⇄ Смартфон)</div>
-            <div class="sync-panel">
-                <button class="btn-sync" onclick="exportData()">📤 Скопіювати код даних</button>
-                <button class="btn-sync" onclick="importData()">📥 Вставити код даних</button>
+            <div class="flex space-x-1.5">
+                <button onclick="startTimer(60)" class="px-3 py-2 bg-gray-900 border border-gray-800 hover:border-gray-700 text-xs font-semibold rounded-xl text-gray-300">60 с</button>
+                <button onclick="startTimer(90)" class="px-3 py-2 bg-gray-900 border border-gray-800 hover:border-gray-700 text-xs font-semibold rounded-xl text-gray-300">90 с</button>
+                <button onclick="stopTimer()" class="px-3 py-2 bg-gray-900 border border-gray-800 text-xs font-semibold rounded-xl text-red-400">Стоп</button>
             </div>
         </div>
     </div>
 
-    <div class="timer-panel">
-        <div>
-            <div style="font-size: 10px; color: #8d99ae; text-transform: uppercase; font-weight: 700;">Відпочинок</div>
-            <div class="timer-display" id="timerDisplay">00:00</div>
+    <!-- МОДАЛКА НОВОЇ ВПРАВИ -->
+    <div id="exercise-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-gray-900 border border-gray-800 w-full max-w-sm rounded-2xl p-4 space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                <h3 class="text-xs font-bold text-white uppercase tracking-wider">Нова вправа в базу</h3>
+                <button onclick="closeNewExerciseModal()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <input type="text" id="new-ex-name" placeholder="Назва вправи" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-cyan-400">
+            <textarea id="new-ex-desc" placeholder="Опис техніки / підказка" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-cyan-400 h-20"></textarea>
+            <button onclick="createNewExercise()" class="w-full bg-cyan-400 text-black font-bold py-2 rounded-xl text-xs uppercase tracking-wider">Зберегти</button>
         </div>
-        <button class="timer-btn" onclick="startTimer(60)">60 с</button>
-        <button class="timer-btn" onclick="startTimer(90)">90 с</button>
-        <button class="timer-btn" style="background-color: #1a1a1a;" onclick="stopTimer()">Стоп</button>
+    </div>
+
+    <!-- МОДАЛКА ПІДКАЗКИ -->
+    <div id="info-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-gray-900 border border-gray-800 w-full max-w-sm rounded-2xl p-4 space-y-3">
+            <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                <h3 id="info-modal-title" class="text-sm font-bold text-cyan-400"></h3>
+                <button onclick="closeInfoModal()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p id="info-modal-body" class="text-xs text-gray-300 leading-relaxed whitespace-pre-wrap"></p>
+        </div>
     </div>
 
     <script>
-        const defaultExerciseDB = {
-            single_leg_lunges: { cat: "Ноги та Сідниці", title: "Випади на одній нозі", tip: "План: 3 підходи по 10-12 повторень", eq: "Дві гантелі в руках.", pos: "Одна нога попереду, інша ззаду на носку. Спина рівна, погляд спрямований вперед.", tech: "Опускайся вертикально вниз, щоб коліно передньої ноги не виходило за лінію носка. Основна вага тіла тисне на п'яту передньої ноги. Опускайся до паралелі стегна з підлогою, після чего піднімайся потужним рухом вгору." },
-            db_squats: { cat: "Ноги та Сідниці", title: "Присідання з гантелями", tip: "План: 3 підходи по 8-10 повторень", eq: "Дві гантелі в опущених руках або утримуються на плечах.", pos: "Ноги на ширині плечей, носки розгорнуті в сторони на 15-30 градусів.", tech: "Починай рух з відведення тазу назад, ніби сідаєш на стілець. Тримай коліна в напрямну носків. Спина пряма. Присідай до паралелі та вставай, штовхаючись п'ятами." },
-            db_shrugs: { cat: "Плечі та Трапеції", title: "Шраги з гантелями", tip: "План: 3 підходи по 8-10 повторень", eq: "Важкі гантелі з боків корпусу.", pos: "Стоячи, ноги на ширині стегон, руки повністю випрямлені в ліктях.", tech: "Ізольованим рухом піднімай плечі вгору в напрямку вух. Не згинай лікті і не обертай плечима по колу. Роби коротку паузу в верхній точці, після чого плавно опускай вагу." },
-            db_seated_press: { cat: "Плечі та Трапеції", title: "Жим гантелей сидячи (вгору)", tip: "План: 3 підходи по 10-12 повторень", eq: "Лава зі спинкою під кутом 80-90 градусів, дві гантелі.", pos: "Сидячи, щільно притисни поперек і лопатки до спинки лави. Гантелі на рівні вух.", tech: "Потужним рухом витискай гантелі вгору по дугоподібній траєкторії. Не блокуй лікті повністю у верхній точці. Плавно опускай снаряди до рівня вух або підборіддя." },
-            db_bench_press: { cat: "Груди та Спина", title: "Жим гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", eq: "Горизонтальна лава, дві гантелі.", pos: "Лежачи на лаві, стопи жорстко впираються в підлогу. Лопатки максимально зведені.", tech: "Опускай гантелі до рівня грудей, тримаючи кут у ліктях близько 45-60 градусів від корпусу. Витискай гантелі вгору, зводячи їх над центром грудей." },
-            pushups: { cat: "Груди та Спина", title: "Віджимання від підлоги", tip: "План: 4 підходи (30-25-25-20 повторень)", eq: "Власна вага тіла.", pos: "Упор лежачи. Руки розташовані трохи ширше плечей. Тіло утворює одну пряму лінію.", tech: "Опускайся до торкання підлоги грудьми. Лікті спрямовані назад под кутом 45 градусів від корпусу. Потужно виштовхуй себе вгору." },
-            bench_dips: { cat: "Руки (Біцепс/Трицепс)", title: "Віджимання від лави на трицепс", tip: "План: 4 підходи (30-25-25-20 повторень)", eq: "Лава або стілець.", pos: "Опора руками ззаду за край лави, ноги витягнуті вперед перед собою.", tech: "Опускай таз вниз уздовж лави, згинаючи лікті до кута 90 градусів. Лікті не повинні розходитися в сторони. Зусиллям трицепсів витискай себе вгору." },
-            bb_row: { cat: "Груди та Спина", title: "Тяга штанги до пояса", tip: "План: 4 підходи по 12-15 повторень", eq: "Штанга, хват зверху або знизу трохи ширше плечей.", pos: "Нахил корпусу вперед приблизно на 45-60 градусів, коліна злегка зігнуті, спина ідеально пряма.", tech: "Тягни гриф штанги вздовж стегон до нижньої частини живота. Рух починається зі зведення лопаток і ведення ліктів назад-вгору." },
-            bb_biceps_full: { cat: "Руки (Біцепс/Трицепс)", title: "Підйом штанги на біцепс (повний)", tip: "План: 4 підходи по 10 повторень", eq: "Штанга з прямим або EZ-грифом. Хват знизу.", pos: "Стоячи рівно, плечі опущені, лікті щільно притиснуті до боків корпусу.", tech: "За рахунок сили біцепсів піднімай штангу вгору до рівня верхньої частини грудей. Лікті залишаються абсолютно нерухомими! Опускай штангу повільно та підконтрольно." },
-            bb_biceps_half: { cat: "Руки (Біцепс/Трицепс)", title: "Підйом штанги на біцепс (наполовину)", tip: "План: 4 підходи по 10 повторень", eq: "Штанга. Хват знизу на ширині плечей.", pos: "Стоячи рівно, лікті зафіксовані з боків тулуба.", tech: "Робота в частковій амплітуді. Рух виконується або в нижній половині (від стегон до паралелі з підлогою), або у верхній половині (від паралелі вгору до грудей)." },
-            db_biceps_half: { cat: "Руки (Біцепс/Трицепс)", title: "Підйом гантелей на біцепс (наполовину)", tip: "План: 4 підходи по 10 повторень", eq: "Дві гантелі.", pos: "Стоячи рівно або сидячи на лаві. Руки опущені, долоні спочатку розгорнуті всередину.", tech: "Піднімай гантелі до кута 90 градусів у ліктях, одночасно розгортаючи кисті долонями вгору (супінація). Робота в обмеженій амплітуді." },
-            db_concentration_curl: { cat: "Руки (Біцепс/Трицепс)", title: "Підйом гантелі на біцепс з упором в коліно", tip: "План: 4 підходи по 10-12 повторень", eq: "Одна гантель, стілець або лава.", pos: "Сидячи на лаві, ноги широко розставлені. Лікоть робочої руки впирається у внутрішню частину стегна.", tech: "Повністю ізольованим рухом згинайте руку з гантеллю в напрямку плеча. Корпус залишається нерухомим, працює виключно біцепс." },
-            abs: { cat: "Коре", title: "Прес (скручування)", tip: "Опрацювання м'язів живота до відмови", eq: "Килимок для фітнесу.", pos: "Лежачи на спині, ноги зігнуті v колінах, стопи на підлозі. Руки тримай біля скронь.", tech: "За рахунок зусилля м'язів преса скручуй верхню частину корпусу вперед, відриваючи від підлоги лише лопатки. Поперек постійно притиснутий до підлоги." },
-            sumo_squat: { cat: "Ноги та Сідниці", title: "Присідання сумо з однією гантеллю", tip: "План: 4 підходи по 10 повторень", eq: "Одна важка гантель, яку утримують обома руками за верхній диск.", pos: "Ноги виставлені значно ширше плечей, носки сильно розгорнуті в сторони (під кутом 45 градусів).", tech: "Присідай глибоко, розводячи коліна чітко в напрямку носків. Спину тримай максимально вертикально. Вставай за рахунок зусилля сідниць." },
-            db_front_raise: { cat: "Плечі та Трапеції", title: "Підйом гантелей перед собою", tip: "План: 4 підходи по 12-15 повторень", eq: "Дві гантелі хватом зверху.", pos: "Стоячи рівно, коліна ледь розслаблені, спина пряма.", tech: "Піднімай трохи зігнуті в ліктях руки вперед перед собою до рівня очей. Уникай розгойдування корпусу — рух виконує строго передня дельта." },
-            db_lateral_raise: { cat: "Плечі та Трапеції", title: "Підйом гантелей в сторони", tip: "План: 4 підходи по 12-15 повторень", eq: "Дві легкі або середні гантелі.", pos: "Стоячи рівно, корпус злегка нахилений вперед, гантелі утримуються перед стегнами.", tech: "Піднімай гантелі через сторони вгору. Рух ведеться ліктями, а не кистями (у верхній точці лікоть трохи вище кисті). Підйом виконується до рівня плечей." },
-            bb_upright_row: { cat: "Плечі та Трапеції", title: "Підйом штанги до грудей 'Вертоліт'", tip: "План: 4 підходи по 10 повторень", eq: "Штанга, вузький або середній хват зверху.", pos: "Стоячи рівно, гриф штанги вільно лежить на стегнах.", tech: "Тягни штангу вертикально вгору вздовж тулуба до рівня підборіддя. Направляй рух ліктями — вони завжди мають першими йти вгору." },
-            romanian_deadlift: { cat: "Ноги та Сідниці", title: "Станова тяга на прямих ногах", tip: "План: 4 підходи по 10-12 повторень", eq: "Штанга або дві важкі гантелі.", pos: "Ноги на ширині стегон. Спина жорстко зафіксована з легким анатомічним прогином.", tech: "Починай рух з відведення тазу назад. Снаряд має ковзати вздовж ніг. Опускайся приблизно до середини гомілки, після чого повертайся назад зусиллям сідниць." },
-            db_flyes: { cat: "Груди та Спина", title: "Розведення гантелей лежачи", tip: "План: 4 підходи по 10-12 повторень", eq: "Горизонтальна лава, дві гантелі.", pos: "Лежачи на лаві, гантелі зведені над грудьми, долоні дивляться одна на одну. Лікті злегка зігнуті.", tech: "Плавно розводь гантелі в сторони по широкій дузі. Фіксуй кут у ліктях незмінним протягом усього руху! Повертай руки вгору по тій же траєкторії." },
-            one_arm_db_row: { cat: "Груди та Спина", title: "Тяга гантелі однією рукою в нахилі", tip: "План: 4 підходи по 12-15 повторень", eq: "Одна гантель, лава або надійна опора.", pos: "Одне коліно та долоня на лаві. Корпус паралельний підлозі. Рука з гантеллю опущена.", tech: "Тягни гантель у напрямку до стегна. Концентруйся на веденні ліктя вгору та максимальному притисканні його до тулуба. Зводь робочу лопатку." },
-            db_hammer_curl: { cat: "Руки (Біцепс/Трицепс)", title: "«Молоток»: підйом гантелей", tip: "План: 4 підходи по 10-12 повторень", eq: "Дві гантелі.", pos: "Стоячи рівно або відновлюючись на лаві. Руки витягнуті вздовж тіла, долоні всередину.", tech: "Піднімай гантелі вгору до плечей, зберігаючи нейтральний хват (долоні дивляться одна на одну). Акцент на роботу плечопроменевого м'яза." },
-            db_triceps_extension: { cat: "Руки (Біцепс/Трицепс)", title: "Підйом гантелі на трицепс з-за голови", tip: "План: 4 підходи по 10-12 повторень", eq: "Одна гантель, яку тримають обома руками під верхній внутрішній диск.", pos: "Сидячи на лаві або стоячи рівно. Руки з гантеллю випрямлені над головою.", tech: "Утримуючи лікті близько до голови, плавно опускай гантель за голову до повного згинання рук. Зусиллям трицепсів випрямляй руки вгору." }
+        const initialExerciseBase = [
+            { id: 'ex_1', name: 'Присідання сумо з гантеллю', desc: 'Ноги ширше плечей, носки розвернуті назовні. Спина пряма.' },
+            { id: 'ex_2', name: 'Підйом гантелей перед собою', desc: 'Контрольований підйом до рівня очей без розгойдування тулуба.' },
+            { id: 'ex_3', name: 'Випади на одній нозі', desc: 'Утримуйте рівновагу, коліно не виходить за носок.' },
+            { id: 'ex_4', name: 'Жим гантелей лежачи', desc: 'Лопатки зведені, лікті під кутом 45 градусів до тулуба.' }
+        ];
+
+        let appState = JSON.parse(localStorage.getItem('powerlog_state')) || {
+            activeDayId: 'day_1',
+            exerciseBase: initialExerciseBase,
+            days: [
+                { id: 'day_1', label: 'День 1', exercises: [] },
+                { id: 'day_2', label: 'День 2', exercises: [] }
+            ],
+            logs: {} // Збережені виконувані дані
         };
 
-        let appState = {
-            activeProgramId: "prog_1",
-            activeDayIndex: 0,
-            customExercises: {},
-            programs: [
-                {
-                    id: "prog_1",
-                    title: "Full Body Сила",
-                    desc: "Гантелі + Штанга",
-                    days: [
-                        { name: "День 1", exercises: [] },
-                        { name: "День 2", exercises: [] }
-                    ]
-                },
-                {
-                    id: "prog_2",
-                    title: "Тільки гантелі",
-                    desc: "Домашній пресет",
-                    days: [
-                        { name: "День 1", exercises: [] }
-                    ]
-                }
-            ]
-        };
-
-        const STORAGE_KEY = "powerLog_v12_custom_exercises";
         let timerInterval = null;
 
         window.onload = function() {
-            localStorage.removeItem('powerLog_v10_appstore_style');
-            localStorage.removeItem('powerLog_v11_unified');
-
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                appState = JSON.parse(saved);
-                if (!appState.customExercises) appState.customExercises = {};
-            }
-            renderApp();
+            if (!appState.exerciseBase) appState.exerciseBase = initialExerciseBase;
+            renderDaysTabs();
+            renderExerciseSelect();
+            renderWorkoutList();
         };
 
         function saveState() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+            localStorage.setItem('powerlog_state', JSON.stringify(appState));
+            renderWorkoutList();
         }
 
-        function getFullExerciseDB() {
-            return { ...defaultExerciseDB, ...appState.customExercises };
-        }
+        // --- ДНІ ТРЕНУВАННЯ ---
+        function renderDaysTabs() {
+            const container = document.getElementById('days-tabs');
+            container.innerHTML = '';
 
-        function toggleCustomExerciseForm() {
-            const form = document.getElementById('customExerciseForm');
-            if(form.style.display === 'flex') {
-                form.style.display = 'none';
-            } else {
-                form.style.display = 'flex';
-                form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-        }
-
-        function saveCustomExercise() {
-            const name = document.getElementById('customName').value.trim();
-            const category = document.getElementById('customCategory').value;
-            const eq = document.getElementById('customEq').value.trim() || "Не вказано";
-            const pos = document.getElementById('customPos').value.trim() || "Не вказано";
-            const tech = document.getElementById('customTech').value.trim() || "Не вказано";
-
-            if (!name) {
-                alert("Будь ласка, введіть назву вправи!");
-                return;
-            }
-
-            const key = 'custom_' + Date.now();
-            appState.customExercises[key] = {
-                cat: category,
-                title: name,
-                tip: "Кастомна вправа",
-                eq: eq,
-                pos: pos,
-                tech: tech
-            };
-
-            saveState();
-            
-            document.getElementById('customName').value = '';
-            document.getElementById('customEq').value = '';
-            document.getElementById('customPos').value = '';
-            document.getElementById('customTech').value = '';
-            
-            toggleCustomExerciseForm();
-            renderApp();
-            
-            document.getElementById('exerciseSelect').value = key;
-        }
-
-        function populateExerciseSelect() {
-            const select = document.getElementById('exerciseSelect');
-            select.innerHTML = '';
-            
-            const fullDB = getFullExerciseDB();
-            
-            const categories = {
-                "Кастомні вправи": [],
-                "Ноги та Сідниці": [],
-                "Груди та Спина": [],
-                "Плечі та Трапеції": [],
-                "Руки (Біцепс/Трицепс)": [],
-                "Коре": []
-            };
-
-            for (let key in fullDB) {
-                const item = fullDB[key];
-                if (key.startsWith('custom_')) {
-                    categories["Кастомні вправи"].push({ key: key, title: `✨ ${item.title} (${item.cat})` });
-                } else {
-                    if (categories[item.cat]) {
-                        categories[item.cat].push({ key: key, title: item.title });
-                    }
-                }
-            }
-
-            for (let catName in categories) {
-                if (categories[catName].length === 0) continue;
-                
-                const group = document.createElement('optgroup');
-                group.label = catName;
-                
-                categories[catName].forEach(ex => {
-                    const option = document.createElement('option');
-                    option.value = ex.key;
-                    option.textContent = ex.title;
-                    group.appendChild(option);
-                });
-                
-                select.appendChild(group);
-            }
-        }
-
-        function createNewProgram() {
-            const name = prompt("Введи назву нової програми тренувань:");
-            if (!name) return;
-            const newId = "prog_" + Date.now();
-            appState.programs.push({
-                id: newId,
-                title: name,
-                desc: "Власна програма",
-                days: [{ name: "День 1", exercises: [] }]
+            appState.days.forEach(day => {
+                const isActive = day.id === appState.activeDayId;
+                const btn = document.createElement('button');
+                btn.className = `px-4 py-1.5 rounded-full text-xs font-bold transition whitespace-nowrap ${
+                    isActive ? 'bg-cyan-400 text-black shadow-lg shadow-cyan-400/20' : 'bg-gray-900 border border-gray-800 text-gray-400 hover:text-white'
+                }`;
+                btn.innerText = day.label;
+                btn.onclick = () => {
+                    appState.activeDayId = day.id;
+                    renderDaysTabs();
+                    renderWorkoutList();
+                };
+                container.appendChild(btn);
             });
-            appState.activeProgramId = newId;
-            appState.activeDayIndex = 0;
-            saveState();
-            renderApp();
-        }
 
-        function deleteProgram(id, event) {
-            event.stopPropagation();
-            if (appState.programs.length <= 1) {
-                alert("Не можна видалити останню програму!");
-                return;
-            }
-            if (confirm("Видалити цю програму разом з усіма днями вправ?")) {
-                appState.programs = appState.programs.filter(p => p.id !== id);
-                if (appState.activeProgramId === id) {
-                    appState.activeProgramId = appState.programs[0].id;
-                    appState.activeDayIndex = 0;
-                }
-                saveState();
-                renderApp();
-            }
-        }
+            // Кнопка нового дня
+            const addBtn = document.createElement('button');
+            addBtn.className = "px-3 py-1.5 rounded-full text-xs font-bold bg-gray-900 border border-dashed border-gray-700 text-gray-400 hover:text-white transition whitespace-nowrap";
+            addBtn.innerText = "+ Новий день";
+            addBtn.onclick = addNewDay;
+            container.appendChild(addBtn);
 
-        function selectProgram(id) {
-            appState.activeProgramId = id;
-            appState.activeDayIndex = 0;
-            renderApp();
+            const activeDay = appState.days.find(d => d.id === appState.activeDayId);
+            document.getElementById('active-day-title').innerText = activeDay ? activeDay.label : '';
         }
 
         function addNewDay() {
-            const prog = appState.programs.find(p => p.id === appState.activeProgramId);
-            if (prog) {
-                const newDayNum = prog.days.length + 1;
-                prog.days.push({ name: `День ${newDayNum}`, exercises: [] });
-                appState.activeDayIndex = prog.days.length - 1;
-                saveState();
-                renderApp();
-            }
-        }
-
-        function selectDay(index) {
-            appState.activeDayIndex = index;
-            renderApp();
-        }
-
-        function getCurrentDayObj() {
-            const prog = appState.programs.find(p => p.id === appState.activeProgramId);
-            if (prog && prog.days[appState.activeDayIndex]) {
-                return prog.days[appState.activeDayIndex];
-            }
-            return null;
-        }
-
-        function addExercise() {
-            const day = getCurrentDayObj();
-            if (!day) return;
-
-            const select = document.getElementById('exerciseSelect');
-            const key = select.value;
-            if(!key) return;
-
-            day.exercises.push({
-                id: 'ex_' + Date.now(),
-                key: key,
-                showVisual: false,
-                sets: [{ weight: 16, reps: 10, done: false }]
+            const newId = 'day_' + Date.now();
+            const newNum = appState.days.length + 1;
+            appState.days.push({
+                id: newId,
+                label: `День ${newNum}`,
+                exercises: []
             });
-
+            appState.activeDayId = newId;
             saveState();
-            renderApp();
+            renderDaysTabs();
         }
 
-        function removeExercise(id) {
-            const day = getCurrentDayObj();
-            if (!day) return;
-            day.exercises = day.exercises.filter(ex => ex.id !== id);
-            saveState();
-            renderApp();
-        }
-
-        function addSet(exId) {
-            const day = getCurrentDayObj();
-            if (!day) return;
-            const ex = day.exercises.find(e => e.id === exId);
-            if (ex) {
-                const last = ex.sets[ex.sets.length - 1];
-                ex.sets.push({
-                    weight: last ? last.weight : 16,
-                    reps: last ? last.reps : 10,
-                    done: false
-                });
-                saveState();
-                renderApp();
-            }
-        }
-
-        function updateSet(exId, setIndex, field, val) {
-            const day = getCurrentDayObj();
-            if (!day) return;
-            const ex = day.exercises.find(e => e.id === exId);
-            if (ex && ex.sets[setIndex]) {
-                ex.sets[setIndex][field] = parseFloat(val) || val;
-                saveState();
-            }
-        }
-
-        function toggleVisual(exId) {
-            const day = getCurrentDayObj();
-            if (!day) return;
-            const ex = day.exercises.find(e => e.id === exId);
-            if (ex) {
-                ex.showVisual = !ex.showVisual;
-                saveState();
-                renderApp();
-            }
-        }
-
-        function toggleDone(exId, setIndex) {
-            const day = getCurrentDayObj();
-            if (!day) return;
-            const ex = day.exercises.find(e => e.id === exId);
-            if (ex && ex.sets[setIndex]) {
-                ex.sets[setIndex].done = !ex.sets[setIndex].done;
-                saveState();
-                renderApp();
-
-                if (ex.sets[setIndex].done) {
-                    startTimer(90);
-                }
-            }
-        }
-
-        function clearCurrentDay() {
-            const day = getCurrentDayObj();
-            if (day && confirm("Очистити всі вправи для цього дня?")) {
-                day.exercises = [];
-                saveState();
-                renderApp();
-                stopTimer();
-            }
-        }
-
-        function exportData() {
-            const dataStr = btoa(unescape(encodeURIComponent(JSON.stringify(appState))));
-            navigator.clipboard.writeText(dataStr).then(() => {
-                alert("Код тренувань та кастомних вправ успішно скопійовано!");
-            }).catch(err => {
-                alert("Не вдалося скопіювати автоматично. Ось твій код:\n\n" + dataStr);
+        // --- БАЗА ВПРАВ ---
+        function renderExerciseSelect() {
+            const select = document.getElementById('exercise-select');
+            select.innerHTML = '';
+            appState.exerciseBase.forEach(ex => {
+                const opt = document.createElement('option');
+                opt.value = ex.id;
+                opt.innerText = ex.name;
+                select.appendChild(opt);
             });
         }
 
-        function importData() {
-            const code = prompt("Встав сюди раніше скопійований код даних:");
-            if (!code) return;
-            try {
-                const decodedData = JSON.parse(decodeURIComponent(escape(atob(code))));
-                if (decodedData && decodedData.programs) {
-                    appState = decodedData;
-                    if (!appState.customExercises) appState.customExercises = {};
-                    saveState();
-                    renderApp();
-                    alert("Всі програми та особисті вправи успішно імпортовано!");
-                } else {
-                    alert("Помилка: Некоректний формат коду.");
-                }
-            } catch (e) {
-                alert("Помилка: Не вдалося розпізнати код. Перевірте правильність копіювання.");
-            }
+        function addExerciseToDay() {
+            const select = document.getElementById('exercise-select');
+            const exId = select.value;
+            if (!exId) return;
+
+            const activeDay = appState.days.find(d => d.id === appState.activeDayId);
+            if (!activeDay) return;
+
+            activeDay.exercises.push({
+                instanceId: 'inst_' + Date.now(),
+                exId: exId,
+                sets: [
+                    { weight: '', reps: 10, done: false },
+                    { weight: '', reps: 10, done: false },
+                    { weight: '', reps: 10, done: false },
+                    { weight: '', reps: 10, done: false }
+                ]
+            });
+
+            saveState();
         }
 
-        function renderApp() {
-            populateExerciseSelect();
+        // --- ЗМІНА ПОРЯДКУ ТА ВИДАЛЕННЯ ВПРАВ ---
+        function moveExercise(instanceId, direction) {
+            const activeDay = appState.days.find(d => d.id === appState.activeDayId);
+            if (!activeDay) return;
 
-            const progContainer = document.getElementById('programsContainer');
-            progContainer.innerHTML = '';
-            
-            appState.programs.forEach(p => {
-                const isActive = p.id === appState.activeProgramId;
-                progContainer.innerHTML += `
-                    <div class="program-card ${isActive ? 'active' : ''}" onclick="selectProgram('${p.id}')">
-                        <button class="btn-delete-program" onclick="deleteProgram('${p.id}', event)">🗑️</button>
-                        <h3>${p.title}</h3>
-                        <p>${p.desc}</p>
-                        <p style="margin-top:8px; color: var(--accent-color); font-weight:600;">${p.days.length} трен. дні</p>
+            const idx = activeDay.exercises.findIndex(e => e.instanceId === instanceId);
+            if (idx === -1) return;
+
+            const newIdx = idx + direction;
+            if (newIdx < 0 || newIdx >= activeDay.exercises.length) return;
+
+            const temp = activeDay.exercises[idx];
+            activeDay.exercises[idx] = activeDay.exercises[newIdx];
+            activeDay.exercises[newIdx] = temp;
+
+            saveState();
+        }
+
+        function removeExerciseFromDay(instanceId) {
+            const activeDay = appState.days.find(d => d.id === appState.activeDayId);
+            if (!activeDay) return;
+
+            activeDay.exercises = activeDay.exercises.filter(e => e.instanceId !== instanceId);
+            saveState();
+        }
+
+        // --- КЕРУВАННЯ ПІДХОДАМИ (ПЛЮС / МІНУС) ---
+        function addSetToExercise(instanceId) {
+            const activeDay = appState.days.find(d => d.id === appState.activeDayId);
+            const item = activeDay?.exercises.find(e => e.instanceId === instanceId);
+            if (!item) return;
+
+            const lastSet = item.sets[item.sets.length - 1] || { weight: '', reps: 10, done: false };
+            item.sets.push({ weight: lastSet.weight, reps: lastSet.reps, done: false });
+            saveState();
+        }
+
+        function removeSetFromExercise(instanceId) {
+            const activeDay = appState.days.find(d => d.id === appState.activeDayId);
+            const item = activeDay?.exercises.find(e => e.instanceId === instanceId);
+            if (!item || item.sets.length <= 1) return;
+
+            item.sets.pop();
+            saveState();
+        }
+
+        // --- СПИСОК ВПРАВ ТРЕНО ВАННЯ (РЕНДЕР) ---
+        function renderWorkoutList() {
+            const container = document.getElementById('workout-exercises-list');
+            container.innerHTML = '';
+
+            const activeDay = appState.days.find(d => d.id === appState.activeDayId);
+            if (!activeDay || activeDay.exercises.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 border border-dashed border-gray-800 rounded-2xl">
+                        <p class="text-xs text-gray-500">У цьому дні ще немає доданих вправ</p>
                     </div>
                 `;
-            });
-
-            const currentProg = appState.programs.find(p => p.id === appState.activeProgramId);
-            const daysTabsContainer = document.getElementById('daysTabsContainer');
-            daysTabsContainer.innerHTML = '';
-
-            if (currentProg) {
-                currentProg.days.forEach((day, index) => {
-                    const isActive = index === appState.activeDayIndex;
-                    daysTabsContainer.innerHTML += `
-                        <button class="day-tab ${isActive ? 'active' : ''}" onclick="selectDay(${index})">
-                            ${day.name}
-                        </button>
-                    `;
-                });
-                daysTabsContainer.innerHTML += `<button class="btn-add-day" onclick="addNewDay()">+ Новий день</button>`;
-            }
-
-            const workoutContainer = document.getElementById('workoutContainer');
-            workoutContainer.innerHTML = '';
-
-            const activeDay = getCurrentDayObj();
-            if (!activeDay || activeDay.exercises.length === 0) {
-                workoutContainer.innerHTML = `<div style="text-align:center; color:#8d99ae; padding: 30px 15px; border: 1px dashed #2d3748; border-radius: 16px; font-size:14px; background-color: #151a21;">У цьому дні ще немає вправ.<br>Обери рух зі списку нижче і натисни "+ Вправу".</div>`;
+                calculateProgress();
                 return;
             }
 
-            const fullDB = getFullExerciseDB();
+            activeDay.exercises.forEach((item, index) => {
+                const baseEx = appState.exerciseBase.find(b => b.id === item.exId) || { name: 'Вправа', desc: '' };
+                const card = document.createElement('div');
+                card.className = "bg-gray-900/90 border border-gray-800 rounded-2xl p-4 shadow-sm";
 
-            activeDay.exercises.forEach(ex => {
-                const db = fullDB[ex.key];
-                if (!db) return;
-
+                // ВАЖЛИВО: Стабільна шапка картки без напливів!
                 let setsHTML = '';
-                ex.sets.forEach((set, sIdx) => {
+                item.sets.forEach((set, sIdx) => {
                     setsHTML += `
-                        <tr class="set-row">
-                            <td>${sIdx + 1}</td>
-                            <td><input type="number" class="input-field" value="${set.weight}" onchange="updateSet('${ex.id}', ${sIdx}, 'weight', this.value)"></td>
-                            <td><input type="number" class="input-field" value="${set.reps}" onchange="updateSet('${ex.id}', ${sIdx}, 'reps', this.value)"></td>
-                            <td style="text-align: right;">
-                                <button class="btn-check ${set.done ? 'done' : ''}" onclick="toggleDone('${ex.id}', ${sIdx})">
-                                    ${set.done ? '✓' : 'Done'}
+                        <div class="grid grid-cols-12 gap-2 items-center mb-2">
+                            <span class="col-span-1 text-xs text-gray-500 font-mono font-bold">${sIdx + 1}</span>
+                            <div class="col-span-5">
+                                <input type="number" value="${set.weight}" placeholder="0" onchange="updateSetData('${item.instanceId}', ${sIdx}, 'weight', this.value)" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-1.5 px-2 text-center text-xs font-bold text-white font-mono focus:outline-none focus:border-cyan-400">
+                            </div>
+                            <div class="col-span-4">
+                                <input type="number" value="${set.reps}" placeholder="10" onchange="updateSetData('${item.instanceId}', ${sIdx}, 'reps', this.value)" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-1.5 px-2 text-center text-xs font-bold text-white font-mono focus:outline-none focus:border-cyan-400">
+                            </div>
+                            <div class="col-span-2 flex justify-center">
+                                <button onclick="toggleSetDone('${item.instanceId}', ${sIdx})" class="w-8 h-8 rounded-xl font-bold text-xs flex items-center justify-center transition ${
+                                    set.done ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' : 'bg-gray-950 text-gray-600 border border-gray-800'
+                                }">
+                                    <i class="fa-solid fa-check"></i>
                                 </button>
-                            </td>
-                        </tr>
+                            </div>
+                        </div>
                     `;
                 });
 
-                workoutContainer.innerHTML += `
-                    <div class="exercise-card">
-                        <div class="exercise-header">
-                            <span class="exercise-title">${db.title}</span>
-                            <div>
-                                <button class="btn-delete" onclick="removeExercise('${ex.id}')">🗑️</button>
-                                <button class="btn-info" onclick="toggleVisual('${ex.id}')">?</button>
-                            </div>
+                card.innerHTML = `
+                    <div class="flex justify-between items-start gap-2 mb-3">
+                        <div class="flex-1 min-w-0">
+                            <h3 class="text-sm font-black text-white leading-snug break-words">${baseEx.name}</h3>
+                            <span class="text-[10px] text-gray-500 font-medium">План: ${item.sets.length} підходів</span>
                         </div>
-                        <div class="exercise-tip">${db.tip}</div>
-
-                        <div class="exercise-guide" style="display: ${ex.showVisual ? 'block' : 'none'}">
-                            <div class="guide-item"><span class="guide-title">🛠️ Інвентар:</span> ${db.eq}</div>
-                            <div class="guide-item"><span class="guide-title">🧘‍♂️ Вихідне положення:</span> ${db.pos}</div>
-                            <div class="guide-item"><span class="guide-title">🎯 Техніка виконання:</span> ${db.tech}</div>
+                        
+                        <!-- Блок дій (в один рядок) -->
+                        <div class="flex items-center space-x-1 flex-shrink-0 bg-gray-950 border border-gray-800/80 rounded-xl p-1">
+                            ${baseEx.desc ? `<button onclick="openInfoModal('${baseEx.name}', \`${baseEx.desc}\`)" class="w-7 h-7 text-cyan-400 hover:bg-gray-800 rounded-lg text-xs font-bold flex items-center justify-center" title="Підказка"><i class="fa-solid fa-circle-question"></i></button>` : ''}
+                            <button onclick="moveExercise('${item.instanceId}', -1)" ${index === 0 ? 'disabled class="opacity-20"' : ''} class="w-7 h-7 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg text-xs flex items-center justify-center"><i class="fa-solid fa-arrow-up"></i></button>
+                            <button onclick="moveExercise('${item.instanceId}', 1)" ${index === activeDay.exercises.length - 1 ? 'disabled class="opacity-20"' : ''} class="w-7 h-7 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg text-xs flex items-center justify-center"><i class="fa-solid fa-arrow-down"></i></button>
+                            <button onclick="removeExerciseFromDay('${item.instanceId}')" class="w-7 h-7 text-red-400 hover:bg-red-500/10 rounded-lg text-xs flex items-center justify-center" title="Видалити"><i class="fa-solid fa-trash-can"></i></button>
                         </div>
+                    </div>
 
-                        <table class="sets-table">
-                            <thead>
-                                <tr>
-                                    <th>Сет</th>
-                                    <th>Вага (кг)</th>
-                                    <th>Повтори</th>
-                                    <th style="text-align: right;">Статус</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${setsHTML}
-                            </tbody>
-                        </table>
-                        <button class="btn-add-set" onclick="addSet('${ex.id}')">+ Додати підхід</button>
+                    <div class="grid grid-cols-12 gap-2 text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-2 px-1">
+                        <span class="col-span-1">Сет</span>
+                        <span class="col-span-5 text-center">Вага (кг)</span>
+                        <span class="col-span-4 text-center">Повтори</span>
+                        <span class="col-span-2 text-center">Статус</span>
+                    </div>
+
+                    ${setsHTML}
+
+                    <!-- Кнопки підходів -->
+                    <div class="grid grid-cols-2 gap-2 mt-3 pt-2 border-t border-gray-800/60">
+                        <button onclick="addSetToExercise('${item.instanceId}')" class="py-1.5 bg-gray-950 hover:bg-gray-800 border border-gray-800 text-cyan-400 rounded-xl text-[11px] font-semibold transition">
+                            + Підхід
+                        </button>
+                        <button onclick="removeSetFromExercise('${item.instanceId}')" ${item.sets.length <= 1 ? 'disabled class="opacity-30 py-1.5 bg-gray-950 border border-gray-800 text-gray-500 rounded-xl text-[11px]"' : 'class="py-1.5 bg-gray-950 hover:bg-gray-800 border border-gray-800 text-red-400 rounded-xl text-[11px] font-semibold transition"'}>
+                            - Підхід
+                        </button>
                     </div>
                 `;
+                container.appendChild(card);
             });
+
+            calculateProgress();
         }
 
-        function startTimer(seconds) {
-            clearInterval(timerInterval);
-            const display = document.getElementById('timerDisplay');
-            display.classList.remove('alarm');
+        function updateSetData(instanceId, setIdx, field, val) {
+            const activeDay = appState.days.find(d => d.id === appState.activeDayId);
+            const item = activeDay?.exercises.find(e => e.instanceId === instanceId);
+            if (!item || !item.sets[setIdx]) return;
+
+            item.sets[setIdx][field] = parseFloat(val) || 0;
+            saveState();
+        }
+
+        function toggleSetDone(instanceId, setIdx) {
+            const activeDay = appState.days.find(d => d.id === appState.activeDayId);
+            const item = activeDay?.exercises.find(e => e.instanceId === instanceId);
+            if (!item || !item.sets[setIdx]) return;
+
+            item.sets[setIdx].done = !item.sets[setIdx].done;
+
+            if (item.sets[setIdx].done) {
+                startTimer(60); // Автостар таймера на 60 сек
+            }
+
+            saveState();
+        }
+
+        function calculateProgress() {
+            const activeDay = appState.days.find(d => d.id === appState.activeDayId);
+            if (!activeDay || activeDay.exercises.length === 0) {
+                document.getElementById('workout-progress-text').innerText = '0% (0/0)';
+                document.getElementById('workout-progress-bar').style.width = '0%';
+                document.getElementById('total-volume').innerText = '0 кг';
+                return;
+            }
+
+            let totalSets = 0;
+            let doneSets = 0;
+            let totalVolume = 0;
+
+            activeDay.exercises.forEach(ex => {
+                ex.sets.forEach(s => {
+                    totalSets++;
+                    if (s.done) {
+                        doneSets++;
+                        const w = parseFloat(s.weight) || 0;
+                        const r = parseFloat(s.reps) || 0;
+                        totalVolume += (w * r);
+                    }
+                });
+            });
+
+            const percent = totalSets > 0 ? Math.round((doneSets / totalSets) * 100) : 0;
+            document.getElementById('workout-progress-text').innerText = `${percent}% (${doneSets}/${totalSets})`;
+            document.getElementById('workout-progress-bar').style.width = `${percent}%`;
+            document.getElementById('total-volume').innerText = `${totalVolume.toLocaleString('uk-UA')} кг`;
+        }
+
+        // --- МОДАЛКИ ВПРАВ ТА ПІДКАЗОК ---
+        function openNewExerciseModal() {
+            document.getElementById('exercise-modal').classList.remove('hidden');
+        }
+
+        function closeNewExerciseModal() {
+            document.getElementById('exercise-modal').classList.add('hidden');
+            document.getElementById('new-ex-name').value = '';
+            document.getElementById('new-ex-desc').value = '';
+        }
+
+        function createNewExercise() {
+            const name = document.getElementById('new-ex-name').value.trim();
+            const desc = document.getElementById('new-ex-desc').value.trim();
+
+            if (!name) {
+                alert('Введіть назву вправи!');
+                return;
+            }
+
+            const newId = 'ex_' + Date.now();
+            appState.exerciseBase.push({ id: newId, name: name, desc: desc });
             
-            let timeLeft = seconds;
-            updateTimerDisplay(timeLeft);
+            closeNewExerciseModal();
+            renderExerciseSelect();
+            saveState();
+        }
+
+        function openInfoModal(title, text) {
+            document.getElementById('info-modal-title').innerText = title;
+            document.getElementById('info-modal-body').innerText = text;
+            document.getElementById('info-modal').classList.remove('hidden');
+        }
+
+        function closeInfoModal() {
+            document.getElementById('info-modal').classList.add('hidden');
+        }
+
+        // --- ТАЙМЕР ВІДПОЧИНКУ ---
+        function startTimer(seconds) {
+            stopTimer();
+            let left = seconds;
+            updateTimerDisplay(left);
 
             timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay(timeLeft);
-
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    display.classList.add('alarm');
+                left--;
+                if (left <= 0) {
+                    stopTimer();
+                    if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+                } else {
+                    updateTimerDisplay(left);
                 }
             }, 1000);
         }
 
         function stopTimer() {
-            clearInterval(timerInterval);
-            const display = document.getElementById('timerDisplay');
-            display.classList.remove('alarm');
-            display.innerText = "00:00";
+            if (timerInterval) clearInterval(timerInterval);
+            updateTimerDisplay(0);
         }
 
-        function updateTimerDisplay(seconds) {
-            const mins = Math.floor(seconds / 60).toString().padStart(2, '0');
-            const secs = (seconds % 60).toString().padStart(2, '0');
-            document.getElementById('timerDisplay').innerText = `${mins}:${secs}`;
+        function updateTimerDisplay(sec) {
+            const m = Math.floor(sec / 60).toString().padStart(2, '0');
+            const s = (sec % 60).toString().padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${m}:${s}`;
+        }
+
+        // --- ЕКСПОРТ / ІМПОРТ / СКИДАННЯ ---
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState));
+            const dl = document.createElement('a');
+            dl.setAttribute("href", dataStr);
+            dl.setAttribute("download", `powerlog_backup_${new Date().toISOString().slice(0,10)}.json`);
+            dl.click();
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.readAsText(file, 'UTF-8');
+                reader.onload = re => {
+                    try {
+                        const parsed = JSON.parse(re.target.result);
+                        if (parsed.days && parsed.exerciseBase) {
+                            appState = parsed;
+                            saveState();
+                            renderDaysTabs();
+                            renderExerciseSelect();
+                            alert('Дані імпортовано успішно!');
+                        }
+                    } catch (err) {
+                        alert('Помилка імпорту.');
+                    }
+                }
+            }
+            input.click();
+        }
+
+        function resetData() {
+            if (confirm('Ви впевнені, що хочете скинути всі дані PowerLog Pro?')) {
+                localStorage.removeItem('powerlog_state');
+                location.reload();
+            }
         }
     </script>
 </body>
