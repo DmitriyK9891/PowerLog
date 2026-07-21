@@ -56,7 +56,7 @@
         <div class="flex space-x-3 text-sm">
             <button onclick="exportData()" class="text-gray-400 hover:text-white" title="Експорт"><i class="fa-solid fa-download"></i></button>
             <button onclick="importData()" class="text-gray-400 hover:text-white" title="Імпорт"><i class="fa-solid fa-upload"></i></button>
-            <button onclick="resetData()" class="text-red-500 hover:text-red-400" title="Скинути"><i class="fa-solid fa-trash-can"></i></button>
+            <button onclick="resetData()" class="text-red-500 hover:text-red-400" title="Скинути дані"><i class="fa-solid fa-trash-can"></i></button>
         </div>
     </header>
 
@@ -80,7 +80,7 @@
         <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar py-1" id="days-tabs"></div>
     </section>
 
-    <!-- ДИСЧЕТЧЕР ВПРАВ В ДНІ -->
+    <!-- ДИСПЕТЧЕР ВПРАВ В ДНІ -->
     <section class="bg-gray-900/60 border border-gray-800 p-3 rounded-2xl mb-4 space-y-2">
         <div class="flex gap-2">
             <select id="exercise-select" class="flex-1 bg-gray-950 border border-gray-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400"></select>
@@ -119,7 +119,7 @@
                 <button onclick="closeNewExerciseModal()" class="text-gray-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <input type="text" id="new-ex-name" placeholder="Назва вправи" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-cyan-400">
-            <textarea id="new-ex-desc" placeholder="Опис техніки / підказка" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-cyan-400 h-20"></textarea>
+            <textarea id="new-ex-desc" placeholder="Опис техніки / підказка (необов'язково)" class="w-full bg-gray-950 border border-gray-800 rounded-xl py-2 px-3 text-xs text-white focus:outline-none focus:border-cyan-400 h-20"></textarea>
             <button onclick="createNewExercise()" class="w-full bg-cyan-400 text-black font-bold py-2 rounded-xl text-xs uppercase tracking-wider">Зберегти</button>
         </div>
     </div>
@@ -137,10 +137,39 @@
 
     <script>
         const initialExerciseBase = [
-            { id: 'ex_1', name: 'Присідання сумо з гантеллю', desc: 'Ноги ширше плечей, носки розвернуті назовні. Спина пряма.' },
-            { id: 'ex_2', name: 'Підйом гантелей перед собою', desc: 'Контрольований підйом до рівня очей без розгойдування тулуба.' },
-            { id: 'ex_3', name: 'Випади на одній нозі', desc: 'Утримуйте рівновагу, коліно не виходить за носок.' },
-            { id: 'ex_4', name: 'Жим гантелей лежачи', desc: 'Лопатки зведені, лікті під кутом 45 градусів до тулуба.' }
+            // === СПИСОК №1: ТВОЇ ТРЕНУВАННЯ (З ПЕРЕКЛАДОМ ТА ПОЯСНЕННЯМИ) ===
+            // --- Тренування 1 ---
+            { id: 'ex_t1_1', name: 'Випади на одній нозі', desc: 'План: 3 х 10-12.\nТехніка: Крок уперед, опускай таз вертикально до кута 90° у колінах. Коліно попереду не виходить за носок.' },
+            { id: 'ex_t1_2', name: 'Присідання з гантелями', desc: 'План: 3 х 8-10.\nТехніка: Тримай гантелі в опущених руках або біля плечей. Спина рівна, п\'яти не відривай від підлоги.' },
+            { id: 'ex_t1_3', name: 'Шраги з гантелями', desc: 'План: 3 х 8-10.\nТехніка: Руки прямі вздовж тулуба. Піднімай плечі максимально вгору до вух без згинання ліктів.' },
+            { id: 'ex_t1_4', name: 'Жим гантелей сидячи', desc: 'План: 3 х 10-12.\nТехніка: Сидячи рівно, витискай гантелі вгору над головою до майже повного розпрямлення ліктів.' },
+            { id: 'ex_t1_5', name: 'Жим гантелей лежачи', desc: 'План: 4 х 10-12.\nТехніка: Лежачи на лаві/підлозі, зводи лопатки і тисни гантелі вгору над грудьми.' },
+            { id: 'ex_t1_6', name: 'Віджимання від підлоги', desc: 'План: 4 х 30-25-25-20.\nТехніка: Тіло — пряма лінія. Опускайся до торкання грудьми підлоги, лікті під кутом 45° до тулуба.' },
+            { id: 'ex_t1_7', name: 'Віджимання від лави (трицепс)', desc: 'План: 4 х 30-25-25-20.\nТехніка: Руки спираються на лаву/стілець ззаду. Опускай таз вертикально до кута 90° у ліктях.' },
+            { id: 'ex_t1_8', name: 'Тяга штанги/гантелей до пояса', desc: 'План: 4 х 12-15.\nТехніка: Нахил тулуба 45°, спина прогнута. Тягни вагу уздовж стегон до низу живота за рахунок спини.' },
+            { id: 'ex_t1_9', name: 'Підйом штанги на біцепс (повний)', desc: 'План: 4 х 10.\nТехніка: Лікті притиснуті до тулуба. Піднімай гриф від стегон до верхньої точки грудей без розгойдування.' },
+            { id: 'ex_t1_10', name: 'Підйом штанги на біцепс (наполовець)', desc: 'План: 4 х 10.\nТехніка: Робота у частковій амплітуді (від стегон до паралелі з підлогою або від паралелі до грудей).' },
+            { id: 'ex_t1_11', name: 'Підйом гантелей на біцепс (наполовець)', desc: 'План: 4 х 10.\nТехніка: Акцентоване опрацювання біцепса у частковій амплітуді без розслаблення у крайніх точках.' },
+            { id: 'ex_t1_12', name: 'Концентроване згинання на біцепс (у коліно)', desc: 'План: 4 х 10-12.\nТехніка: Сидячи, лікоть спирається у внутрішню частину стегна. Піднімай гантель чітко зусиллям біцепса.' },
+            { id: 'ex_t1_13', name: 'Скручування на прес', desc: 'План: 4 х макс.\nТехніка: Лежачи на спині, відривай лише лопатки від підлоги, максимально скорочуючи м\'язи преса.' },
+
+            // --- Тренування 2 ---
+            { id: 'ex_t2_1', name: 'Присідання сумо з гантеллю', desc: 'План: 4 х 10.\nТехніка: Широка постановка ніг, носки в сторони. Тримай гантель між ніг і присідай глибоко.' },
+            { id: 'ex_t2_2', name: 'Підйом гантелей перед собою', desc: 'План: 4 х 12-15.\nТехніка: Піднімай прямі (або трохи зігнуті) руки з гантелями до рівня очей перед собою.' },
+            { id: 'ex_t2_3', name: 'Махи гантелями в сторони', desc: 'План: 4 х 12-15.\nТехніка: Підйом гантелей через сторони до рівня плечей. Лікті трохи вище за кисті.' },
+            { id: 'ex_t2_4', name: 'Тяга штанги/гантелей до підборіддя ("Вертоліт")', desc: 'План: 4 х 10.\nТехніка: Вузький або середній хват. Тягни вагу вгору уздовж тулуба, піднімаючи лікті вище плечей.' },
+            { id: 'ex_t2_5', name: 'Румунська тяга (на прямих ногах)', desc: 'План: 4 х 10-12.\nТехніка: Ноги майже прямі, таз відводь назад, нахиляйся із прямою спиною до відчуття розтягування біцепса стегна.' },
+            { id: 'ex_t2_6', name: 'Розведення гантелей лежачи', desc: 'План: 4 х 10-12.\nТехніка: Лежачи на лаві, розводь трохи зігнуті руки в сторони до рівня грудей та зводь назад.' },
+            { id: 'ex_t2_7', name: 'Тяга гантелі однією рукою в нахилі', desc: 'План: 4 х 12-15.\nТехніка: Упор коліном і рукою на лаву. Тягни гантель до пояса, зводячи лопатку.' },
+            { id: 'ex_t2_8', name: 'Підйом гантелей "Молоток"', desc: 'План: 4 х 10-12.\nТехніка: Хват нейтральний (долоні дивляться одна на одну). Згинання рук без розвертання кистей.' },
+            { id: 'ex_t2_9', name: 'Розгинання руки з гантеллю на трицепс (із-за голови)', desc: 'План: 4 х 10-12.\nТехніка: Лікоть дивиться вгору і зафіксований. Розгинай руку з гантеллю вгору над головою.' },
+
+            // === СПИСОК №2: АЛЬТЕРНАТИВНА БАЗА ===
+            { id: 'ex_alt_1', name: 'Жим гантелей на похилій лаві', desc: 'Опрацювання верхньої частини грудей. Кут лави 30-45 градусів.' },
+            { id: 'ex_alt_2', name: 'Французький жим з гантелями', desc: 'Ізольована вправа на трицепс лежачи. Згинання ліктів до скронь.' },
+            { id: 'ex_alt_3', name: 'Махи гантелями в нахилі (задня дельта)', desc: 'Нахил тулуба 60°, розведення рук у сторони для опрацювання задньої частини плечей.' },
+            { id: 'ex_alt_4', name: 'Підйом ніг у висі', desc: 'Ефективна вправа на нижню частину преса. Підйом колін або прямих ніг до паралелі.' },
+            { id: 'ex_alt_5', name: 'Планка', desc: 'Статична вправа на корі. Тримай тіло ідеально рівним від голови до п\'ят.' }
         ];
 
         let appState = JSON.parse(localStorage.getItem('powerlog_state')) || {
@@ -149,8 +178,7 @@
             days: [
                 { id: 'day_1', label: 'День 1', exercises: [] },
                 { id: 'day_2', label: 'День 2', exercises: [] }
-            ],
-            logs: {} // Збережені виконувані дані
+            ]
         };
 
         let timerInterval = null;
@@ -187,7 +215,6 @@
                 container.appendChild(btn);
             });
 
-            // Кнопка нового дня
             const addBtn = document.createElement('button');
             addBtn.className = "px-3 py-1.5 rounded-full text-xs font-bold bg-gray-900 border border-dashed border-gray-700 text-gray-400 hover:text-white transition whitespace-nowrap";
             addBtn.innerText = "+ Новий день";
@@ -291,7 +318,7 @@
             saveState();
         }
 
-        // --- СПИСОК ВПРАВ ТРЕНО ВАННЯ (РЕНДЕР) ---
+        // --- СПИСОК ВПРАВ ТРЕНУВАННЯ (РЕНДЕР) ---
         function renderWorkoutList() {
             const container = document.getElementById('workout-exercises-list');
             container.innerHTML = '';
@@ -312,7 +339,6 @@
                 const card = document.createElement('div');
                 card.className = "bg-gray-900/90 border border-gray-800 rounded-2xl p-4 shadow-sm";
 
-                // ВАЖЛИВО: Стабільна шапка картки без напливів!
                 let setsHTML = '';
                 item.sets.forEach((set, sIdx) => {
                     setsHTML += `
@@ -342,7 +368,6 @@
                             <span class="text-[10px] text-gray-500 font-medium">План: ${item.sets.length} підходів</span>
                         </div>
                         
-                        <!-- Блок дій (в один рядок) -->
                         <div class="flex items-center space-x-1 flex-shrink-0 bg-gray-950 border border-gray-800/80 rounded-xl p-1">
                             ${baseEx.desc ? `<button onclick="openInfoModal('${baseEx.name}', \`${baseEx.desc}\`)" class="w-7 h-7 text-cyan-400 hover:bg-gray-800 rounded-lg text-xs font-bold flex items-center justify-center" title="Підказка"><i class="fa-solid fa-circle-question"></i></button>` : ''}
                             <button onclick="moveExercise('${item.instanceId}', -1)" ${index === 0 ? 'disabled class="opacity-20"' : ''} class="w-7 h-7 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg text-xs flex items-center justify-center"><i class="fa-solid fa-arrow-up"></i></button>
@@ -360,7 +385,6 @@
 
                     ${setsHTML}
 
-                    <!-- Кнопки підходів -->
                     <div class="grid grid-cols-2 gap-2 mt-3 pt-2 border-t border-gray-800/60">
                         <button onclick="addSetToExercise('${item.instanceId}')" class="py-1.5 bg-gray-950 hover:bg-gray-800 border border-gray-800 text-cyan-400 rounded-xl text-[11px] font-semibold transition">
                             + Підхід
@@ -393,7 +417,7 @@
             item.sets[setIdx].done = !item.sets[setIdx].done;
 
             if (item.sets[setIdx].done) {
-                startTimer(60); // Автостар таймера на 60 сек
+                startTimer(60);
             }
 
             saveState();
@@ -532,7 +556,7 @@
         }
 
         function resetData() {
-            if (confirm('Ви впевнені, що хочете скинути всі дані PowerLog Pro?')) {
+            if (confirm('Ви впевнені, що хочете очистити кєш та скинути дані PowerLog Pro?')) {
                 localStorage.removeItem('powerlog_state');
                 location.reload();
             }
